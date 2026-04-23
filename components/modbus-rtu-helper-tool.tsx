@@ -199,54 +199,84 @@ export function ModbusRTUHelperTool() {
 
   const serialApi = typeof navigator === "undefined" ? undefined : (navigator as SerialNavigator).serial;
 
-  const requestDefinition = useMemo(() => {
+  const parsedSlave = parseNumericInput(slave);
+  const parsedStartAddress = parseNumericInput(startAddress);
+  const parsedQuantity = parseNumericInput(quantity);
+  const parsedRegisterValue = parseNumericInput(singleRegisterValue);
+  const parsedCoilValues = parseBooleanList(coilList);
+  const parsedRegisterValues = parseWordList(registerList);
+  const requestNote = modbusFunctionOptions.find((option) => option.value === requestKind)?.note ?? "";
+
+  const requestValidation = validateModbusRequestConfig({
+    kind: requestKind,
+    startAddress: parsedStartAddress ?? undefined,
+    quantity: parsedQuantity ?? undefined,
+    coilValue: singleCoilValue,
+    registerValue: parsedRegisterValue ?? undefined,
+    coilValues: parsedCoilValues,
+    registerValues: parsedRegisterValues,
+    customPayload: payload,
+  });
+
+  const requestDefinition = (() => {
     if (requestKind === "custom") {
       return {
         functionCode: parseNumericInput(functionCode),
         payloadBytes: parseHexPairs(payload),
-        note: modbusFunctionOptions.find((option) => option.value === requestKind)?.note ?? "",
+        note: requestNote,
       };
     }
 
-    const start = parseNumericInput(startAddress);
-    const count = parseNumericInput(quantity);
-    const built = buildModbusRequestPayload({
-      kind: requestKind,
-      startAddress: start ?? 0,
-      quantity: count ?? 0,
-      coilValue: singleCoilValue,
-      registerValue: parseNumericInput(singleRegisterValue) ?? 0,
-      coilValues: parseBooleanList(coilList),
-      registerValues: parseWordList(registerList),
-    });
+    if (requestValidation.length > 0) {
+      return {
+        functionCode: null,
+        payloadBytes: [],
+        note: requestNote,
+      };
+    }
 
     return {
-      ...built,
-      note: modbusFunctionOptions.find((option) => option.value === requestKind)?.note ?? "",
+      ...buildModbusRequestPayload({
+        kind: requestKind,
+        startAddress: parsedStartAddress ?? undefined,
+        quantity: parsedQuantity ?? undefined,
+        coilValue: singleCoilValue,
+        registerValue: parsedRegisterValue ?? undefined,
+        coilValues: parsedCoilValues,
+        registerValues: parsedRegisterValues,
+      }),
+      note: requestNote,
     };
-  }, [coilList, functionCode, payload, quantity, registerList, requestKind, singleCoilValue, singleRegisterValue, startAddress]);
+  })();
 
-  const requestValidation = useMemo(() => validateModbusRequestConfig({
-    kind: requestKind,
-    startAddress: parseNumericInput(startAddress) ?? undefined,
-    quantity: parseNumericInput(quantity) ?? undefined,
-    coilValue: singleCoilValue,
-    registerValue: parseNumericInput(singleRegisterValue) ?? undefined,
-    coilValues: parseBooleanList(coilList),
-    registerValues: parseWordList(registerList),
-    customPayload: payload,
-  }), [coilList, payload, quantity, registerList, requestKind, singleCoilValue, singleRegisterValue, startAddress]);
+  useEffect(() => {
+    if (requestKind === "custom") return;
 
-  const frameBytes = useMemo(() => {
-    const slaveValue = parseNumericInput(slave);
-    if (slaveValue === null) return null;
-    const currentFunctionCode = requestDefinition.functionCode;
+    if (requestValidation.length > 0) {
+      setFunctionCode("");
+      setPayload("");
+      return;
+    }
+
+    const nextFunctionCode = requestDefinition.functionCode === null || requestDefinition.functionCode === undefined
+      ? ""
+      : requestDefinition.functionCode.toString(16).toUpperCase().padStart(2, "0");
+    const nextPayload = groupHexBytes(requestDefinition.payloadBytes);
+
+    setFunctionCode((current) => current === nextFunctionCode ? current : nextFunctionCode);
+    setPayload((current) => current === nextPayload ? current : nextPayload);
+  }, [requestDefinition.functionCode, requestDefinition.payloadBytes, requestKind, requestValidation.length]);
+
+  const frameBytes = (() => {
+    if (parsedSlave === null) return null;
+    const currentFunctionCode = parseNumericInput(functionCode);
     if (currentFunctionCode === null || currentFunctionCode === undefined) return null;
-    const bytes = [slaveValue & 0xff, currentFunctionCode & 0xff, ...requestDefinition.payloadBytes];
+    const payloadBytes = parseHexPairs(payload);
+    const bytes = [parsedSlave & 0xff, currentFunctionCode & 0xff, ...payloadBytes];
     if (bytes.length < 2) return null;
     const crc = crc16Modbus(bytes);
     return [...bytes, crc & 0xff, (crc >> 8) & 0xff];
-  }, [requestDefinition, slave]);
+  })();
 
   const frame = useMemo(() => {
     if (!frameBytes) return null;
@@ -387,7 +417,7 @@ export function ModbusRTUHelperTool() {
           {requestKind === "write-multiple-registers" ? <label className="block space-y-2 text-sm font-semibold text-ink/80 md:col-span-2">Register values<textarea value={registerList} onChange={(event) => setRegisterList(event.target.value)} rows={3} className="min-h-[96px] w-full rounded-[1.4rem] border border-ink/10 bg-white/80 px-4 py-4 font-mono text-sm outline-none transition focus:border-accent" /></label> : null}
         </div>
       )}
-      <div className="rounded-[1.4rem] border border-ink/10 bg-canvas p-4 text-sm text-ink/75"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-lake">Payload preview</p><p className="mt-2 font-mono text-ink">{requestDefinition.payloadBytes.length > 0 ? groupHexBytes(requestDefinition.payloadBytes) : "No payload bytes yet."}</p></div>
+      <div className="rounded-[1.4rem] border border-ink/10 bg-canvas p-4 text-sm text-ink/75"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-lake">Payload preview</p><p className="mt-2 font-mono text-ink">{payload || "No payload bytes yet."}</p></div>
       {requestValidation.length > 0 ? <div className="rounded-[1.4rem] border border-[#f2b8a4] bg-[#fff3ed] p-4 text-sm text-accentDark"><p className="text-xs font-semibold uppercase tracking-[0.18em]">Request checks</p><div className="mt-2 space-y-1">{requestValidation.map((issue) => <p key={issue}>{issue}</p>)}</div></div> : <div className="rounded-[1.4rem] border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">Request fields look valid for the selected Modbus function.</div>}
       <div className="rounded-[1.4rem] border border-ink/10 bg-white/70 p-4"><p className="text-xs font-semibold uppercase tracking-[0.2em] text-lake">Frame with CRC (little-endian CRC bytes)</p><p className="mt-2 font-mono text-sm text-ink">{frame ?? "Enter at least slave + function bytes"}</p></div>
       <div className="rounded-[1.4rem] border border-ink/10 bg-white/70 p-4">
