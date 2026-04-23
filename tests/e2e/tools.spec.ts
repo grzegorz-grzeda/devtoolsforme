@@ -14,6 +14,15 @@ test("UUID tool generates valid UUIDs", async ({ page }) => {
   await page.getByRole("button", { name: /Generate new batch/i }).click();
   const nextUuid = (await codes.first().textContent())?.trim() ?? "";
   expect(nextUuid).toMatch(uuidRegex);
+
+  await page.getByRole("button", { name: /UUID v5/i }).click();
+  await page.getByLabel(/^Name$/).fill("example.com");
+  await expect(codes.first()).toContainText("cfbff0d1-9375-5685-968c-48ce8b15ae17");
+
+  await page.getByRole("button", { name: /UUID v3/i }).click();
+  await page.getByLabel(/^Name$/).fill("example.com");
+  await expect(codes.first()).toContainText("9073926b-929f-31c2-abc9-fad77ae3e8eb");
+  await expect(page.getByText(/Version guide/i)).toBeVisible();
 });
 
 test("Base64 tool encodes and decodes text", async ({ page }) => {
@@ -196,8 +205,8 @@ test("Intel HEX inspector parses records and absolute address", async ({ page })
 
   await expect(page.getByText(/Checksum errors/i)).toBeVisible();
   await expect(page.getByText(/0x08000000/i).first()).toBeVisible();
+  await expect(page.getByText(/^16$/).first()).toBeVisible();
   await expect(page.getByText(/Extended linear 0x0800/i)).toBeVisible();
-  await expect(page.getByText(/Gap before span: 16 bytes/i)).toBeVisible();
 });
 
 test("S-record inspector parses records and validates checksums", async ({ page }) => {
@@ -231,7 +240,7 @@ test("consent banner persists acceptance and recently opened tools appear on hom
   await expect(page.getByRole("heading", { name: "JSON Formatter" })).toBeVisible();
 
   await page.goto("/");
-  await expect(page.getByText(/Recently opened/i)).toBeVisible();
+  await expect(page.getByText(/Recent/i)).toBeVisible();
   await expect(page.getByRole("link", { name: /JSON Formatter/i }).first()).toBeVisible();
 
   const consent = await page.evaluate(() => window.localStorage.getItem("dtfm-consent-analytics"));

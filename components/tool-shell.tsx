@@ -16,33 +16,37 @@ export function ToolShell({
   children: ReactNode;
 }) {
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-8 md:px-10">
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-5 py-6 md:px-8 md:py-7">
       <ToolVisitTracker slug={slug} />
 
-      <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <Link
           href="/"
-          className="rounded-full border border-ink/15 bg-white/70 px-4 py-2 text-sm font-medium text-ink transition hover:-translate-y-0.5 hover:bg-white"
+          className="rounded-full border border-ink/15 bg-white/70 px-3 py-1.5 text-sm font-medium text-ink transition hover:-translate-y-0.5 hover:bg-white"
         >
-          Back to all tools
+          Back to tools
         </Link>
-        <span className="rounded-full bg-sage px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-lake">
+        <span className="rounded-full bg-sage px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-lake">
           {eyebrow}
         </span>
       </div>
 
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start">
-        <div className="space-y-5">
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-lake/80">devtoolsforme</p>
-          <h1 className="max-w-xl text-4xl font-bold tracking-tight text-ink md:text-6xl">{title}</h1>
-          <p className="max-w-lg text-lg leading-8 text-ink/75">{description}</p>
-          <div className="flex flex-wrap gap-3">
-            <FavoriteToolButton slug={slug} />
-            <ToolCopyLinkButton title={title} />
+      <section className="space-y-4">
+        <div className="space-y-4 rounded-[1.6rem] border border-white/60 bg-card p-5 shadow-soft backdrop-blur md:p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-lake/80">devtoolsforme</p>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="space-y-3">
+              <h1 className="max-w-3xl text-3xl font-bold tracking-tight text-ink md:text-4xl">{title}</h1>
+              <p className="max-w-3xl text-sm leading-7 text-ink/75 md:text-base">{description}</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <FavoriteToolButton slug={slug} />
+              <ToolCopyLinkButton title={title} />
+            </div>
           </div>
         </div>
 
-        <div className="rounded-[2rem] border border-white/70 bg-card p-5 shadow-soft backdrop-blur md:p-7">
+        <div className="rounded-[1.6rem] border border-white/70 bg-card p-4 shadow-soft backdrop-blur md:p-5">
           {children}
         </div>
       </section>

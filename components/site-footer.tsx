@@ -1,23 +1,29 @@
 import Link from "next/link";
 
+const footerLinks = [
+  { href: "/", label: "All tools" },
+  { href: "/about", label: "About" },
+  { href: "/privacy", label: "Privacy" },
+  { href: "/terms", label: "Terms" },
+  { href: "mailto:hello@devtoolsforme.com?subject=devtoolsforme%20feedback", label: "Feedback" },
+];
+
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/60 bg-white/40">
-      <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 py-10 md:grid-cols-[minmax(0,1fr)_auto] md:px-10">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-lake/80">devtoolsforme</p>
-          <p className="mt-3 max-w-xl text-sm leading-7 text-ink/70">
-            A growing set of practical developer tools built to stay fast, browser-first, and easy to trust.
-          </p>
-          <Link href="mailto:hello@devtoolsforme.com?subject=devtoolsforme%20feedback" className="mt-4 inline-flex text-sm font-semibold text-accent transition hover:text-accentDark">
-            Send feedback -&gt;
-          </Link>
+    <footer className="border-t border-white/60 bg-white/35">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-5 py-5 text-sm text-ink/70 md:flex-row md:items-center md:justify-between md:px-8">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-lake/80">devtoolsforme</p>
+          <span className="hidden text-ink/30 md:inline">/</span>
+          <p className="text-xs text-ink/60">Browser-first developer utilities</p>
         </div>
-        <div className="grid gap-3 text-sm text-ink/70 md:items-end">
-          <Link href="/" className="transition hover:text-accent">Browse all tools</Link>
-          <Link href="/about" className="transition hover:text-accent">About</Link>
-          <Link href="/privacy" className="transition hover:text-accent">Privacy</Link>
-          <Link href="/terms" className="transition hover:text-accent">Terms</Link>
+
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs md:text-sm">
+          {footerLinks.map((item) => (
+            <Link key={item.href} href={item.href} className="transition hover:text-accent">
+              {item.label}
+            </Link>
+          ))}
         </div>
       </div>
     </footer>
