@@ -74,7 +74,7 @@ function hslToRgb(h: number, s: number, l: number) {
   else if (segment < 3) [red, green, blue] = [0, chroma, second];
   else if (segment < 4) [red, green, blue] = [0, second, chroma];
   else if (segment < 5) [red, green, blue] = [second, 0, chroma];
-  else [red, green, blue] = [chroma, 0, second];
+  else[red, green, blue] = [chroma, 0, second];
 
   return {
     r: Math.round((red + match) * 255),
@@ -110,7 +110,7 @@ function hsvToRgb(h: number, s: number, v: number) {
   else if (segment < 3) [red, green, blue] = [0, chroma, second];
   else if (segment < 4) [red, green, blue] = [0, second, chroma];
   else if (segment < 5) [red, green, blue] = [second, 0, chroma];
-  else [red, green, blue] = [chroma, 0, second];
+  else[red, green, blue] = [chroma, 0, second];
 
   return {
     r: Math.round((red + match) * 255),
@@ -233,13 +233,13 @@ export function ColorConverterTool() {
           })()
           : inputMode === "hsv"
             ? (() => {
-                const hsv = parseHsv(hsvInput);
-                return hsv ? hsvToRgb(hsv.h, hsv.s, hsv.v) : null;
-              })()
+              const hsv = parseHsv(hsvInput);
+              return hsv ? hsvToRgb(hsv.h, hsv.s, hsv.v) : null;
+            })()
             : (() => {
-                const cmyk = parseCmyk(cmykInput);
-                return cmyk ? cmykToRgb(cmyk.c, cmyk.m, cmyk.y, cmyk.k) : null;
-              })();
+              const cmyk = parseCmyk(cmykInput);
+              return cmyk ? cmykToRgb(cmyk.c, cmyk.m, cmyk.y, cmyk.k) : null;
+            })();
     if (!rgb) return null;
 
     const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
