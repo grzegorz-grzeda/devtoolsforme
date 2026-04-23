@@ -22,7 +22,7 @@ export const tools: ToolDefinition[] = [
   { slug: "timer-prescaler", name: "Timer Prescaler Calculator", description: "Estimate timer tick periods, interrupt intervals, and resulting frequencies.", badge: "Embedded", category: "Embedded" },
   { slug: "can-frame-helper", name: "CAN Frame Helper", description: "Inspect simple CAN ID, frame type, DLC, and data byte layouts.", badge: "Embedded", category: "Embedded" },
   { slug: "modbus-rtu-helper", name: "Modbus RTU Helper", description: "Assemble simple Modbus RTU frames and append the correct CRC bytes.", badge: "Embedded", category: "Embedded" },
-  { slug: "spi-i2c-cheatsheet", name: "SPI I2C Cheatsheet", description: "Keep common SPI mode mappings and I2C pull-up guidance close at hand.", badge: "Embedded", category: "Embedded" },
+  { slug: "spi-i2c-cheatsheet", name: "SPI I2C Cheatsheet", description: "Reference SPI modes, convert I2C addresses, and estimate practical pull-up values.", badge: "Embedded", category: "Embedded" },
   { slug: "logic-level-converter", name: "Logic Level ADC DAC Converter", description: "Translate voltages into ADC counts and back using your selected reference.", badge: "Embedded", category: "Embedded" },
   { slug: "embedded-unit-converter", name: "Embedded Unit Converter", description: "Convert between Hz, kHz, MHz and ns, us, ms for common firmware calculations.", badge: "Embedded", category: "Embedded" },
   { slug: "float-inspector", name: "IEEE-754 Float Inspector", description: "Inspect a float as hex plus its sign, exponent, and mantissa fields.", badge: "Embedded", category: "Embedded" },
