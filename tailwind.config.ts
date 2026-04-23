@@ -19,7 +19,7 @@ const config: Config = {
         panel: "rgb(var(--color-panel) / <alpha-value>)",
       },
       boxShadow: {
-        soft: "0 24px 60px rgb(var(--color-shadow) / 0.22)",
+        soft: "0 24px 60px rgb(var(--color-shadow) / 0.12)",
       },
       fontFamily: {
         sans: ["Space Grotesk", "Avenir Next", "Segoe UI", "sans-serif"],
@@ -27,7 +27,7 @@ const config: Config = {
       },
       backgroundImage: {
         "hero-grid":
-          "linear-gradient(rgb(var(--color-grid) / 0.22) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--color-grid) / 0.22) 1px, transparent 1px)",
+          "linear-gradient(rgb(var(--color-grid) / 0.06) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--color-grid) / 0.06) 1px, transparent 1px)",
       },
     },
   },
