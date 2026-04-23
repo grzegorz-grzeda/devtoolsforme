@@ -4,7 +4,8 @@ const navItems = [
   { href: "/", label: "All tools" },
   { href: "/tools/json-formatter", label: "Data" },
   { href: "/tools/regex-tester", label: "Text" },
-  { href: "/tools/hash-generator", label: "Security" },
+  { href: "/about", label: "About" },
+  { href: "mailto:hello@devtoolsforme.com?subject=devtoolsforme%20feedback", label: "Feedback" },
 ];
 
 export function SiteHeader() {

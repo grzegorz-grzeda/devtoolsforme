@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 
 const favoritesKey = "dtfm-favorite-tools";
 const recentKey = "dtfm-recent-tools";
+const openCountsKey = "dtfm-tool-open-counts";
 
-function readList(key: string) {
+export function readStoredList(key: string) {
   try {
     const raw = window.localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as string[]) : [];
@@ -14,15 +15,28 @@ function readList(key: string) {
   }
 }
 
-function writeList(key: string, values: string[]) {
-  window.localStorage.setItem(key, JSON.stringify(values));
+export function readStoredCounts() {
+  try {
+    const raw = window.localStorage.getItem(openCountsKey);
+    return raw ? (JSON.parse(raw) as Record<string, number>) : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeValue(key: string, value: string[] | Record<string, number>) {
+  window.localStorage.setItem(key, JSON.stringify(value));
   window.dispatchEvent(new Event("tool-preferences-changed"));
 }
 
 export function ToolVisitTracker({ slug }: { slug: string }) {
   useEffect(() => {
-    const current = readList(recentKey).filter((entry) => entry !== slug);
-    writeList(recentKey, [slug, ...current].slice(0, 6));
+    const current = readStoredList(recentKey).filter((entry) => entry !== slug);
+    writeValue(recentKey, [slug, ...current].slice(0, 6));
+
+    const counts = readStoredCounts();
+    counts[slug] = (counts[slug] ?? 0) + 1;
+    writeValue(openCountsKey, counts);
   }, [slug]);
 
   return null;
@@ -32,16 +46,16 @@ export function FavoriteToolButton({ slug }: { slug: string }) {
   const [favorite, setFavorite] = useState(false);
 
   useEffect(() => {
-    const update = () => setFavorite(readList(favoritesKey).includes(slug));
+    const update = () => setFavorite(readStoredList(favoritesKey).includes(slug));
     update();
     window.addEventListener("tool-preferences-changed", update);
     return () => window.removeEventListener("tool-preferences-changed", update);
   }, [slug]);
 
   function toggleFavorite() {
-    const current = readList(favoritesKey);
+    const current = readStoredList(favoritesKey);
     const next = current.includes(slug) ? current.filter((entry) => entry !== slug) : [slug, ...current].slice(0, 8);
-    writeList(favoritesKey, next);
+    writeValue(favoritesKey, next);
   }
 
   return (
@@ -76,3 +90,9 @@ export function ToolCopyLinkButton({ title }: { title: string }) {
     </button>
   );
 }
+
+export const toolPreferenceKeys = {
+  favoritesKey,
+  recentKey,
+  openCountsKey,
+};

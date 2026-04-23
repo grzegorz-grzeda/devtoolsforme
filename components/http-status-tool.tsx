@@ -3,22 +3,36 @@
 import { useMemo, useState } from "react";
 
 const statusMap: Record<string, { title: string; detail: string; category: string }> = {
+  "100": { title: "Continue", detail: "The initial part of the request was received and the client should continue.", category: "Informational" },
+  "101": { title: "Switching Protocols", detail: "The server is switching to a different protocol as requested.", category: "Informational" },
   "200": { title: "OK", detail: "The request succeeded and the response contains the expected data.", category: "Success" },
   "201": { title: "Created", detail: "A new resource was created successfully.", category: "Success" },
+  "202": { title: "Accepted", detail: "The request was accepted for processing but has not completed yet.", category: "Success" },
   "204": { title: "No Content", detail: "The request succeeded and there is nothing to return in the body.", category: "Success" },
   "301": { title: "Moved Permanently", detail: "The resource now lives at a different permanent URL.", category: "Redirect" },
   "302": { title: "Found", detail: "The resource is temporarily available at another URL.", category: "Redirect" },
+  "304": { title: "Not Modified", detail: "The cached version can be reused because nothing changed.", category: "Redirect" },
+  "307": { title: "Temporary Redirect", detail: "Repeat the request at another URL using the same method.", category: "Redirect" },
+  "308": { title: "Permanent Redirect", detail: "Repeat the request at a new permanent URL using the same method.", category: "Redirect" },
   "400": { title: "Bad Request", detail: "The server could not process the request because the input was invalid.", category: "Client Error" },
   "401": { title: "Unauthorized", detail: "Authentication is required or failed.", category: "Client Error" },
   "403": { title: "Forbidden", detail: "The client is authenticated but does not have permission.", category: "Client Error" },
   "404": { title: "Not Found", detail: "The requested resource could not be found.", category: "Client Error" },
+  "405": { title: "Method Not Allowed", detail: "The endpoint exists but does not allow that HTTP method.", category: "Client Error" },
+  "408": { title: "Request Timeout", detail: "The server timed out waiting for the request to finish.", category: "Client Error" },
   "409": { title: "Conflict", detail: "The request conflicts with the current state of the target resource.", category: "Client Error" },
+  "410": { title: "Gone", detail: "The resource used to exist but is intentionally no longer available.", category: "Client Error" },
+  "418": { title: "I'm a Teapot", detail: "A playful status code used in some APIs and tests.", category: "Client Error" },
   "422": { title: "Unprocessable Content", detail: "The request structure is valid but semantic validation failed.", category: "Client Error" },
   "429": { title: "Too Many Requests", detail: "Rate limits were exceeded for this client or token.", category: "Client Error" },
   "500": { title: "Internal Server Error", detail: "The server encountered an unexpected condition.", category: "Server Error" },
+  "501": { title: "Not Implemented", detail: "The server does not support the functionality needed for the request.", category: "Server Error" },
   "502": { title: "Bad Gateway", detail: "An upstream server returned an invalid response.", category: "Server Error" },
-  "503": { title: "Service Unavailable", detail: "The service is temporarily unavailable, often due to overload or maintenance.", category: "Server Error" }
+  "503": { title: "Service Unavailable", detail: "The service is temporarily unavailable, often due to overload or maintenance.", category: "Server Error" },
+  "504": { title: "Gateway Timeout", detail: "An upstream dependency took too long to respond.", category: "Server Error" }
 };
+
+const popularCodes = ["200", "201", "400", "401", "403", "404", "422", "429", "500", "503"];
 
 export function HTTPStatusTool() {
   const [query, setQuery] = useState("404");
@@ -36,6 +50,11 @@ export function HTTPStatusTool() {
         Search by code or label
         <input value={query} onChange={(event) => setQuery(event.target.value)} className="w-full rounded-2xl border border-ink/10 bg-white/90 px-4 py-3 text-lg outline-none transition focus:border-accent" />
       </label>
+      <div className="flex flex-wrap gap-3">
+        {popularCodes.map((code) => (
+          <button key={code} type="button" onClick={() => setQuery(code)} className="rounded-full bg-sage px-4 py-2 text-sm font-semibold text-lake transition hover:bg-sage/70">{code}</button>
+        ))}
+      </div>
       <div className="grid gap-3">
         {matches.map(([code, info]) => (
           <div key={code} className="rounded-[1.4rem] border border-ink/10 bg-white/70 p-4">
