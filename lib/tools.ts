@@ -39,6 +39,7 @@ export const tools: ToolDefinition[] = [
   { slug: "json-formatter", name: "JSON Formatter", description: "Validate, prettify, and minify JSON with clear error feedback for malformed input.", badge: "Data", category: "Data" },
   { slug: "json-diff", name: "JSON Diff", description: "Compare two JSON documents side by side and quickly spot structural or value changes.", badge: "Data", category: "Data" },
   { slug: "json-to-typescript", name: "JSON to TypeScript", description: "Turn sample JSON into a fast starter TypeScript type definition.", badge: "Data", category: "Data" },
+  { slug: "protobuf-parser", name: "Protobuf Parser", description: "Validate a provided .proto schema and parse protobuf payloads as JSON, hex, or Base64.", badge: "Data", category: "Data" },
   { slug: "url-encoder", name: "URL Encoder", description: "Encode and decode URLs, query strings, and reserved characters for safer sharing.", badge: "Encoding", category: "Encoding" },
   { slug: "url-parser", name: "URL Parser", description: "Break down a URL into protocol, host, path, parameters, and fragment parts instantly.", badge: "Encoding", category: "Encoding" },
   { slug: "query-param-editor", name: "Query Param Editor", description: "Build and edit URLs with query parameters without hand-editing long strings.", badge: "Encoding", category: "Encoding" },
