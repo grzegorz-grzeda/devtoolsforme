@@ -17,7 +17,7 @@ export const tools: ToolDefinition[] = [
   { slug: "memory-viewer", name: "Memory Viewer", description: "Inspect raw hex bytes as offsets, grouped hex, and printable ASCII.", badge: "Embedded", category: "Embedded" },
   { slug: "ascii-hex-byte", name: "ASCII Hex Byte Converter", description: "Convert strings into byte values, hex bytes, and C-friendly representations.", badge: "Embedded", category: "Embedded" },
   { slug: "c-escape-generator", name: "C Escape Generator", description: "Turn text into escaped C string literals or explicit hex escape sequences.", badge: "Embedded", category: "Embedded" },
-  { slug: "c-array-generator", name: "C Array Generator", description: "Generate const uint8_t arrays from sample text for firmware source files.", badge: "Embedded", category: "Embedded" },
+  { slug: "c-array-generator", name: "C Array Generator", description: "Generate C byte arrays from text or turn uploaded images into SSD1309-ready monochrome bitmaps.", badge: "Embedded", category: "Embedded" },
   { slug: "fixed-point-converter", name: "Fixed-Point Converter", description: "Convert decimal values into scaled fixed-point integers using configurable Q formats.", badge: "Embedded", category: "Embedded" },
   { slug: "timer-prescaler", name: "Timer Prescaler Calculator", description: "Estimate timer tick periods, interrupt intervals, and resulting frequencies.", badge: "Embedded", category: "Embedded" },
   { slug: "can-frame-helper", name: "CAN Frame Helper", description: "Inspect simple CAN ID, frame type, DLC, and data byte layouts.", badge: "Embedded", category: "Embedded" },

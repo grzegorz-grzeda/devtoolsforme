@@ -1,11 +1,18 @@
 import { describe, expect, it } from "vitest";
 import {
+  bytesToCArray,
+  convertImageDataToMonochromeBytes,
+  convertImageDataToSsd1309Bytes,
   formatHex,
   groupHexBytes,
+  packHorizontalBytes,
+  packMonochromeBytes,
+  packSsd1309Bytes,
   parseHexPairs,
   parseIntelHex,
   parseNumericInput,
   parseSRecord,
+  rgbaToMonochromePixels,
 } from "../../lib/embedded-advanced";
 
 describe("parseNumericInput", () => {
@@ -27,6 +34,86 @@ describe("formatting helpers", () => {
     expect(formatHex(255, 4)).toBe("0x00FF");
     expect(groupHexBytes([0x12, 0xab, 0x0f])).toBe("12 AB 0F");
     expect(parseHexPairs("12 ab 0f")).toEqual([0x12, 0xab, 0x0f]);
+  });
+
+  it("formats byte arrays as C source", () => {
+    expect(bytesToCArray("logo", [0x01, 0xab, 0xff], 2)).toBe(
+      "const uint8_t logo[] = {\n  0x01, 0xAB,\n  0xFF\n};",
+    );
+  });
+});
+
+describe("ssd1309 bitmap helpers", () => {
+  it("converts rgba pixels into monochrome bits", () => {
+    const rgba = new Uint8ClampedArray([
+      0, 0, 0, 255,
+      255, 255, 255, 255,
+      127, 127, 127, 255,
+      255, 255, 255, 0,
+    ]);
+
+    expect(rgbaToMonochromePixels(rgba, 2, 2, 128)).toEqual([1, 0, 1, 0]);
+  });
+
+  it("packs pixels in SSD1309 page order", () => {
+    const pixels = [
+      1, 0,
+      0, 1,
+      1, 0,
+      0, 1,
+      1, 0,
+      0, 1,
+      1, 0,
+      0, 1,
+    ];
+
+    expect(packSsd1309Bytes(pixels, 2, 8)).toEqual([0x55, 0xaa]);
+  });
+
+  it("packs pixels in horizontal MSB-first order", () => {
+    const pixels = [
+      1, 0, 1, 0, 1, 0, 1, 0,
+      0, 1, 0, 1, 0, 1, 0, 1,
+    ];
+
+    expect(packHorizontalBytes(pixels, 8, 2)).toEqual([0xaa, 0x55]);
+    expect(packMonochromeBytes(pixels, 8, 2, "horizontal-msb")).toEqual([0xaa, 0x55]);
+  });
+
+  it("converts image data directly into SSD1309 bytes", () => {
+    const rgba = new Uint8ClampedArray([
+      0, 0, 0, 255,
+      255, 255, 255, 255,
+      255, 255, 255, 255,
+      0, 0, 0, 255,
+      0, 0, 0, 255,
+      255, 255, 255, 255,
+      255, 255, 255, 255,
+      0, 0, 0, 255,
+    ]);
+
+    const converted = convertImageDataToSsd1309Bytes(rgba, 1, 8, 128);
+
+    expect(converted.pixels).toEqual([1, 0, 0, 1, 1, 0, 0, 1]);
+    expect(converted.bytes).toEqual([0x99]);
+  });
+
+  it("converts image data directly into horizontal bytes", () => {
+    const rgba = new Uint8ClampedArray([
+      0, 0, 0, 255,
+      255, 255, 255, 255,
+      0, 0, 0, 255,
+      255, 255, 255, 255,
+      0, 0, 0, 255,
+      255, 255, 255, 255,
+      0, 0, 0, 255,
+      255, 255, 255, 255,
+    ]);
+
+    const converted = convertImageDataToMonochromeBytes(rgba, 4, 2, 128, false, "horizontal-msb");
+
+    expect(converted.pixels).toEqual([1, 0, 1, 0, 1, 0, 1, 0]);
+    expect(converted.bytes).toEqual([0xa0, 0xa0]);
   });
 });
 

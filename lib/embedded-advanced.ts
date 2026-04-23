@@ -24,6 +24,114 @@ export function parseHexPairs(input: string) {
   return pairs.filter((pair) => pair.length === 2).map((pair) => Number.parseInt(pair, 16));
 }
 
+export function bytesToCArray(name: string, bytes: number[], columns = 12) {
+  const safeName = name.trim() || "payload";
+  if (bytes.length === 0) return `const uint8_t ${safeName}[] = {};
+`;
+
+  const lines: string[] = [];
+  for (let index = 0; index < bytes.length; index += columns) {
+    const slice = bytes.slice(index, index + columns);
+    lines.push(`  ${slice.map((byte) => formatHex(byte)).join(", ")}`);
+  }
+
+  return `const uint8_t ${safeName}[] = {\n${lines.join(",\n")}\n};`;
+}
+
+export function rgbaToMonochromePixels(
+  rgba: Uint8ClampedArray,
+  width: number,
+  height: number,
+  threshold: number,
+  invert = false,
+) {
+  const pixels = new Array<number>(width * height).fill(0);
+
+  for (let index = 0; index < width * height; index += 1) {
+    const offset = index * 4;
+    const red = rgba[offset] ?? 0;
+    const green = rgba[offset + 1] ?? 0;
+    const blue = rgba[offset + 2] ?? 0;
+    const alpha = (rgba[offset + 3] ?? 255) / 255;
+    const blended = 255 - (255 - (0.299 * red + 0.587 * green + 0.114 * blue)) * alpha;
+    const on = invert ? blended >= threshold : blended < threshold;
+    pixels[index] = on ? 1 : 0;
+  }
+
+  return pixels;
+}
+
+export function packSsd1309Bytes(pixels: number[], width: number, height: number) {
+  const pages = Math.ceil(height / 8);
+  const bytes: number[] = [];
+
+  for (let page = 0; page < pages; page += 1) {
+    for (let x = 0; x < width; x += 1) {
+      let value = 0;
+      for (let bit = 0; bit < 8; bit += 1) {
+        const y = page * 8 + bit;
+        if (y >= height) continue;
+        const pixel = pixels[y * width + x] ?? 0;
+        if (pixel) value |= 1 << bit;
+      }
+      bytes.push(value);
+    }
+  }
+
+  return bytes;
+}
+
+export function packHorizontalBytes(pixels: number[], width: number, height: number) {
+  const bytes: number[] = [];
+
+  for (let y = 0; y < height; y += 1) {
+    for (let chunk = 0; chunk < Math.ceil(width / 8); chunk += 1) {
+      let value = 0;
+      for (let bit = 0; bit < 8; bit += 1) {
+        const x = chunk * 8 + bit;
+        if (x >= width) continue;
+        const pixel = pixels[y * width + x] ?? 0;
+        if (pixel) value |= 1 << (7 - bit);
+      }
+      bytes.push(value);
+    }
+  }
+
+  return bytes;
+}
+
+export type BitmapPackingMode = "ssd1309-page" | "horizontal-msb";
+
+export function packMonochromeBytes(pixels: number[], width: number, height: number, packing: BitmapPackingMode) {
+  if (packing === "horizontal-msb") return packHorizontalBytes(pixels, width, height);
+  return packSsd1309Bytes(pixels, width, height);
+}
+
+export function convertImageDataToMonochromeBytes(
+  rgba: Uint8ClampedArray,
+  width: number,
+  height: number,
+  threshold: number,
+  invert = false,
+  packing: BitmapPackingMode = "ssd1309-page",
+) {
+  const pixels = rgbaToMonochromePixels(rgba, width, height, threshold, invert);
+  return {
+    pixels,
+    bytes: packMonochromeBytes(pixels, width, height, packing),
+  };
+}
+
+export function convertImageDataToSsd1309Bytes(
+  rgba: Uint8ClampedArray,
+  width: number,
+  height: number,
+  threshold: number,
+  invert = false,
+) {
+  return convertImageDataToMonochromeBytes(rgba, width, height, threshold, invert, "ssd1309-page");
+}
+
 export type IntelHexRecord = {
   line: number;
   byteCount: number;
