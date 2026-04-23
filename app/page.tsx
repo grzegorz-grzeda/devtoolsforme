@@ -7,7 +7,7 @@ const embeddedCount = tools.filter((tool) => tool.category === "Embedded").lengt
 export default function Home() {
   return (
     <main className="mx-auto min-h-screen max-w-6xl flex-1 px-5 py-6 md:px-8 md:py-8">
-      <section className="rounded-[1.8rem] border border-white/60 bg-card px-5 py-5 shadow-soft backdrop-blur md:px-7 md:py-6">
+      <section className="theme-panel rounded-[1.8rem] px-5 py-5 md:px-7 md:py-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-lake/80">devtoolsforme</p>
@@ -21,26 +21,20 @@ export default function Home() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Link
-              href="/tools/bitmask-calculator"
-              className="rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-accentDark"
-            >
+            <Link href="/tools/bitmask-calculator" className="theme-primary-button px-4 py-2.5 text-sm font-semibold">
               Embedded tools
             </Link>
-            <Link
-              href="mailto:hello@devtoolsforme.com?subject=devtoolsforme%20feedback"
-              className="rounded-full border border-ink/15 bg-white/70 px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-white"
-            >
+            <Link href="mailto:hello@devtoolsforme.com?subject=devtoolsforme%20feedback" className="theme-secondary-button px-4 py-2.5 text-sm font-semibold">
               Request a tool
             </Link>
           </div>
         </div>
 
         <div className="mt-5 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-lake/85">
-          <span className="rounded-full bg-sage px-3 py-1.5">{tools.length} tools</span>
-          <span className="rounded-full bg-sage px-3 py-1.5">{embeddedCount} embedded</span>
-          <span className="rounded-full bg-sage px-3 py-1.5">client-side only</span>
-          <span className="rounded-full bg-sage px-3 py-1.5">privacy-first analytics</span>
+          <span className="theme-chip px-3 py-1.5">{tools.length} tools</span>
+          <span className="theme-chip px-3 py-1.5">{embeddedCount} embedded</span>
+          <span className="theme-chip px-3 py-1.5">client-side only</span>
+          <span className="theme-chip px-3 py-1.5">privacy-first analytics</span>
         </div>
       </section>
 

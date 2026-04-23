@@ -15,8 +15,8 @@ export default function AboutPage() {
         <p>The product is shaped around everyday workflows: formatting JSON, inspecting tokens, working with URLs, comparing text, checking accessibility colors, and converting data into forms that are easier to use.</p>
       </div>
       <div className="mt-10 flex flex-wrap gap-3">
-        <Link href="/" className="rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accentDark">Browse all tools</Link>
-        <Link href="mailto:hello@devtoolsforme.com?subject=devtoolsforme%20feedback" className="rounded-full border border-ink/15 bg-white/70 px-5 py-3 text-sm font-semibold text-ink transition hover:bg-white">Send feedback</Link>
+        <Link href="/" className="theme-primary-button px-5 py-3 text-sm font-semibold">Browse all tools</Link>
+        <Link href="mailto:hello@devtoolsforme.com?subject=devtoolsforme%20feedback" className="theme-secondary-button px-5 py-3 text-sm font-semibold">Send feedback</Link>
       </div>
     </main>
   );

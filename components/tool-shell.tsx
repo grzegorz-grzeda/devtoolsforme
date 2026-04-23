@@ -20,13 +20,10 @@ export function ToolShell({
       <ToolVisitTracker slug={slug} />
 
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <Link
-          href="/"
-          className="rounded-full border border-ink/15 bg-white/70 px-3 py-1.5 text-sm font-medium text-ink transition hover:-translate-y-0.5 hover:bg-white"
-        >
+        <Link href="/" className="theme-secondary-button px-3 py-1.5 text-sm font-medium">
           Back to tools
         </Link>
-        <span className="rounded-full bg-sage px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-lake">
+        <span className="theme-chip px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em]">
           {eyebrow}
         </span>
       </div>

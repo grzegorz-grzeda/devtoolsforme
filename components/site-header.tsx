@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-controller";
 
 const navItems = [
   { href: "/", label: "All tools" },
@@ -22,17 +23,16 @@ export function SiteHeader() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-2 md:flex">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-full border border-ink/10 bg-white/60 px-3 py-1.5 text-sm font-medium text-ink transition hover:-translate-y-0.5 hover:bg-white"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="flex items-center gap-2">
+          <nav className="hidden items-center gap-2 md:flex">
+            {navItems.map((item) => (
+              <Link key={item.href} href={item.href} className="theme-secondary-button px-3 py-1.5 text-sm font-medium">
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );
