@@ -1,0 +1,21 @@
+{
+  "name": "devtoolsforme",
+  "short_name": "devtoolsforme",
+  "description": "Browser-first developer tools for everyday work.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f3eb",
+  "theme_color": "#15241d",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

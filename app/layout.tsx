@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     undefined
   ),
   metadataBase: new URL("https://devtoolsforme.com"),
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
