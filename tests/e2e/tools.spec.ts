@@ -151,13 +151,13 @@ test("fixed-point converter scales decimal into Q format", async ({ page }) => {
 test("register field builder packs a field into a register", async ({ page }) => {
   await page.goto("/tools/register-field-builder");
 
-  const inputs = page.locator("input");
-  await inputs.nth(0).fill("0x12345678");
-  await inputs.nth(1).fill("0x3");
-  await inputs.nth(2).fill("8");
-  await inputs.nth(3).fill("2");
+  await page.getByRole("button", { name: /Remove/i }).nth(1).click();
+  await page.getByLabel(/Base register value/i).fill("0x12345678");
+  await page.getByLabel(/^Value$/).first().fill("0x3");
+  await page.getByLabel(/^Offset$/).first().fill("8");
+  await page.getByLabel(/^Width$/).first().fill("2");
 
-  await expect(page.getByText(/Field mask/i)).toBeVisible();
+  await expect(page.getByText(/Combined field mask/i)).toBeVisible();
   await expect(page.getByText(/0x00000300/i).first()).toBeVisible();
   await expect(page.getByText(/0x12345778/i)).toBeVisible();
 });
@@ -197,6 +197,7 @@ test("Intel HEX inspector parses records and absolute address", async ({ page })
   await expect(page.getByText(/Checksum errors/i)).toBeVisible();
   await expect(page.getByText(/0x08000000/i).first()).toBeVisible();
   await expect(page.getByText(/Extended linear 0x0800/i)).toBeVisible();
+  await expect(page.getByText(/Gap before span: 16 bytes/i)).toBeVisible();
 });
 
 test("S-record inspector parses records and validates checksums", async ({ page }) => {

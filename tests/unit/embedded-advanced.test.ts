@@ -32,14 +32,24 @@ describe("formatting helpers", () => {
 
 describe("parseIntelHex", () => {
   it("parses extended linear addresses and summarizes data", () => {
-    const parsed = parseIntelHex(`:020000040800F2\n:040010001122334442\n:00000001FF`);
+    const parsed = parseIntelHex(`:020000040800F2\n:040010001122334442\n:04002000AABBCCDDCE\n:00000001FF`);
 
-    expect(parsed.summary.recordCount).toBe(3);
-    expect(parsed.summary.dataBytes).toBe(4);
+    expect(parsed.summary.recordCount).toBe(4);
+    expect(parsed.summary.dataBytes).toBe(8);
     expect(parsed.summary.checksumErrors).toBe(0);
-    expect(parsed.summary.highestAddress).toBe(0x08000013);
+    expect(parsed.summary.lowestAddress).toBe(0x08000010);
+    expect(parsed.summary.highestAddress).toBe(0x08000023);
+    expect(parsed.summary.spanCount).toBe(2);
+    expect(parsed.summary.gapCount).toBe(1);
+    expect(parsed.summary.largestGap).toBe(12);
     expect(parsed.records[1]?.absoluteAddress).toBe(0x08000010);
     expect(parsed.records[1]?.data).toEqual([0x11, 0x22, 0x33, 0x44]);
+    expect(parsed.spans[1]).toMatchObject({
+      start: 0x08000020,
+      end: 0x08000023,
+      bytes: 4,
+      gapBefore: 12,
+    });
   });
 
   it("flags checksum and syntax failures", () => {

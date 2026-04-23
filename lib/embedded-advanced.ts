@@ -24,7 +24,7 @@ export function parseHexPairs(input: string) {
   return pairs.filter((pair) => pair.length === 2).map((pair) => Number.parseInt(pair, 16));
 }
 
-type IntelHexRecord = {
+export type IntelHexRecord = {
   line: number;
   byteCount: number;
   address: number;
@@ -34,6 +34,13 @@ type IntelHexRecord = {
   checksumValid: boolean;
   absoluteAddress: number | null;
   note: string;
+};
+
+export type AddressSpan = {
+  start: number;
+  end: number;
+  bytes: number;
+  gapBefore: number;
 };
 
 export function parseIntelHex(input: string) {
@@ -47,6 +54,7 @@ export function parseIntelHex(input: string) {
   let dataBytes = 0;
   let checksumErrors = 0;
   let highestAddress = -1;
+  let lowestAddress = Number.POSITIVE_INFINITY;
 
   const records: IntelHexRecord[] = lines.map((line, index) => {
     if (!line.startsWith(":")) {
@@ -95,6 +103,7 @@ export function parseIntelHex(input: string) {
     if (recordType === 0x00) {
       absoluteAddress = ((upperLinear << 16) + (upperSegment << 4) + address) >>> 0;
       dataBytes += data.length;
+      lowestAddress = Math.min(lowestAddress, absoluteAddress);
       highestAddress = Math.max(highestAddress, absoluteAddress + Math.max(data.length - 1, 0));
     } else if (recordType === 0x01) {
       note = "EOF";
@@ -127,14 +136,50 @@ export function parseIntelHex(input: string) {
     };
   });
 
+  const spans: AddressSpan[] = [];
+  const dataRecords = records
+    .filter((record) => record.recordType === 0x00 && record.absoluteAddress !== null && record.data.length > 0)
+    .sort((left, right) => (left.absoluteAddress as number) - (right.absoluteAddress as number));
+
+  for (const record of dataRecords) {
+    const start = record.absoluteAddress as number;
+    const end = start + record.data.length - 1;
+    const previous = spans.at(-1);
+
+    if (!previous) {
+      spans.push({ start, end, bytes: record.data.length, gapBefore: 0 });
+      continue;
+    }
+
+    if (start <= previous.end + 1) {
+      previous.end = Math.max(previous.end, end);
+      previous.bytes = previous.end - previous.start + 1;
+      continue;
+    }
+
+    spans.push({
+      start,
+      end,
+      bytes: record.data.length,
+      gapBefore: start - previous.end - 1,
+    });
+  }
+
+  const largestGap = spans.reduce((largest, span) => Math.max(largest, span.gapBefore), 0);
+
   return {
     records,
     summary: {
       recordCount: records.length,
       dataBytes,
       checksumErrors,
+      lowestAddress: Number.isFinite(lowestAddress) ? lowestAddress : null,
       highestAddress: highestAddress >= 0 ? highestAddress : null,
+      spanCount: spans.length,
+      gapCount: Math.max(spans.length - 1, 0),
+      largestGap,
     },
+    spans,
   };
 }
 
