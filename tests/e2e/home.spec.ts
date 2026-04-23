@@ -5,6 +5,8 @@ test("homepage loads and links to tool pages", async ({ page }) => {
 
   await expect(page.getByRole("heading", { name: /Pocket-sized developer tools/i })).toBeVisible();
   await expect(page.getByRole("heading", { name: /Embedded tools that save real firmware time/i })).toBeVisible();
+  await expect(page.getByText(/Embedded starter set/i)).toBeVisible();
+  await expect(page.getByText(/^Registers$/)).toBeVisible();
   await expect(page.getByRole("link", { name: /Open Embedded tools/i })).toBeVisible();
 
   await page.getByRole("link", { name: /UUID Generator/i }).first().click();

@@ -79,6 +79,40 @@ test("endianness converter flips byte order", async ({ page }) => {
   await expect(page.getByText(/CD AB 34 12/i)).toBeVisible();
 });
 
+test("UART baud calculator shows divisor and error", async ({ page }) => {
+  await page.goto("/tools/uart-baud-calculator");
+
+  const inputs = page.locator("input");
+  await inputs.nth(0).fill("16000000");
+  await inputs.nth(1).fill("115200");
+
+  await expect(page.getByText(/UBRR \/ divisor/i)).toBeVisible();
+  await expect(page.getByText(/^8$/).first()).toBeVisible();
+  await expect(page.getByText(/111111\.11/i)).toBeVisible();
+});
+
+test("float inspector shows IEEE-754 hex breakdown", async ({ page }) => {
+  await page.goto("/tools/float-inspector");
+
+  const input = page.locator("input").first();
+  await input.fill("1.5");
+
+  await expect(page.getByText(/0x3FC00000/i)).toBeVisible();
+  await expect(page.getByText(/^0$/).first()).toBeVisible();
+  await expect(page.getByText(/01111111/)).toBeVisible();
+});
+
+test("C array generator produces uint8_t output", async ({ page }) => {
+  await page.goto("/tools/c-array-generator");
+
+  const inputs = page.locator("input, textarea");
+  await inputs.nth(0).fill("payload");
+  await inputs.nth(1).fill("OK");
+
+  await expect(page.getByText(/const uint8_t payload\[\]/i)).toBeVisible();
+  await expect(page.getByText(/0x4F, 0x4B/i)).toBeVisible();
+});
+
 test("two's complement converter shows signed and unsigned views", async ({ page }) => {
   await page.goto("/tools/twos-complement");
 

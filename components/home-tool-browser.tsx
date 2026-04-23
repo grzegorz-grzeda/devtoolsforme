@@ -8,6 +8,13 @@ import type { ToolDefinition } from "@/lib/tools";
 const allCategory = "All";
 const featuredCategory = "Embedded";
 
+const embeddedHighlights = [
+  { title: "Registers", detail: "bitmasks, ranges, two's complement" },
+  { title: "Timing", detail: "UART, timers, unit conversion" },
+  { title: "Bytes", detail: "CRC, endianness, memory, arrays" },
+  { title: "Protocols", detail: "CAN, Modbus, SPI, I2C" },
+];
+
 function mapTools(slugs: string[], tools: ToolDefinition[]) {
   return slugs
     .map((slug) => tools.find((tool) => tool.slug === slug))
@@ -43,10 +50,12 @@ export function HomeToolBrowser({ tools }: { tools: ToolDefinition[] }) {
     [tools]
   );
 
-  const featuredTools = useMemo(
-    () => tools.filter((tool) => tool.category === featuredCategory).slice(0, 6),
+  const embeddedTools = useMemo(
+    () => tools.filter((tool) => tool.category === featuredCategory),
     [tools]
   );
+
+  const featuredTools = useMemo(() => embeddedTools.slice(0, 6), [embeddedTools]);
 
   const filteredTools = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -80,7 +89,7 @@ export function HomeToolBrowser({ tools }: { tools: ToolDefinition[] }) {
   return (
     <section className="mt-6 space-y-8">
       <section className="overflow-hidden rounded-[2rem] border border-white/60 bg-ink p-6 text-white shadow-soft">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] xl:items-start">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-white/60">Featured track</p>
             <h3 className="mt-3 text-3xl font-bold tracking-tight">Embedded tools that save real firmware time</h3>
@@ -88,15 +97,31 @@ export function HomeToolBrowser({ tools }: { tools: ToolDefinition[] }) {
               Registers, bytes, timing, CRCs, float inspection, two&apos;s complement, protocol helpers, and more. The embedded category is now a serious workspace instead of just a side note.
             </p>
             <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
-              <span>{tools.filter((tool) => tool.category === featuredCategory).length} embedded tools</span>
+              <span>{embeddedTools.length} embedded tools</span>
               <span>Browser-first</span>
               <span>Firmware workflow ready</span>
             </div>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {embeddedHighlights.map((item) => (
+                <div key={item.title} className="rounded-[1.4rem] border border-white/10 bg-white/5 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/55">{item.title}</p>
+                  <p className="mt-2 text-sm leading-6 text-white/85">{item.detail}</p>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {featuredTools.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} index={tools.findIndex((entry) => entry.slug === tool.slug)} />
-            ))}
+          <div>
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/60">Embedded starter set</p>
+                <p className="mt-1 text-sm text-white/75">A quick path into the tools most likely to help first.</p>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {featuredTools.map((tool) => (
+                <ToolCard key={tool.slug} tool={tool} index={tools.findIndex((entry) => entry.slug === tool.slug)} />
+              ))}
+            </div>
           </div>
         </div>
       </section>
