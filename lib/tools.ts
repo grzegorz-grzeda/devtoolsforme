@@ -8,6 +8,7 @@ export type ToolDefinition = {
 
 export const tools: ToolDefinition[] = [
   { slug: "uuid", name: "UUID Generator", description: "Create v4 UUIDs instantly and copy a fresh batch for IDs, tests, and fixtures.", badge: "Identity", category: "Identity" },
+  { slug: "bitmask-calculator", name: "Bitmask Calculator", description: "Set, clear, toggle, and inspect register bits across 8, 16, and 32-bit values.", badge: "Embedded", category: "Embedded" },
   { slug: "base64", name: "Base64 Encoder", description: "Encode or decode text with UTF-8 support without leaving the browser.", badge: "Encoding", category: "Encoding" },
   { slug: "calculator", name: "Calculator", description: "A quick arithmetic workspace with keyboard-friendly buttons and running evaluation.", badge: "Math", category: "Math" },
   { slug: "hex-calculator", name: "Hex Calculator", description: "Convert between decimal, hexadecimal, binary, and octal while keeping everything in sync.", badge: "Number Systems", category: "Math" },
