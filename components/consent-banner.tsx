@@ -47,7 +47,7 @@ export function ConsentBanner() {
           <button
             type="button"
             onClick={() => choose("granted")}
-            className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-accentDark"
+            className="theme-primary-button px-4 py-2 text-sm font-semibold"
           >
             Accept analytics
           </button>

@@ -10,7 +10,7 @@ export default function PrivacyPage() {
       <h1 className="mt-4 text-5xl font-bold tracking-tight text-ink">Privacy-first by design.</h1>
       <div className="mt-8 space-y-6 text-base leading-8 text-ink/75">
         <p>Most devtoolsforme utilities run directly in your browser. Inputs you enter into tools are generally processed locally and are not sent to a server controlled by devtoolsforme.</p>
-        <p>The site stores a small amount of browser data locally to support features like favorites, recently used tools, local popularity rankings, and analytics consent choices.</p>
+        <p>The site stores a small amount of browser data locally to support features like favorites, recently used tools, local popularity rankings, theme preference, and analytics consent choices.</p>
         <p>If you accept analytics, Google Analytics may collect usage data such as page views and device/browser information under Google’s policies. If you decline, analytics stays disabled.</p>
         <p>If you contact devtoolsforme by email, your message and email address will be used only to respond to you and improve the product.</p>
       </div>

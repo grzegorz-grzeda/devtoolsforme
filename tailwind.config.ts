@@ -9,23 +9,25 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        canvas: "#f7f3eb",
-        ink: "#15241d",
-        accent: "#ef6c3d",
-        accentDark: "#b94821",
-        sage: "#dce5d3",
-        lake: "#1f5460",
-        card: "rgba(255, 252, 247, 0.8)",
+        canvas: "rgb(var(--color-canvas) / <alpha-value>)",
+        ink: "rgb(var(--color-text) / <alpha-value>)",
+        accent: "rgb(var(--color-accent) / <alpha-value>)",
+        accentDark: "rgb(var(--color-accent-strong) / <alpha-value>)",
+        sage: "rgb(var(--color-muted-surface) / <alpha-value>)",
+        lake: "rgb(var(--color-muted-text) / <alpha-value>)",
+        card: "rgb(var(--color-card) / <alpha-value>)",
+        panel: "rgb(var(--color-panel) / <alpha-value>)",
       },
       boxShadow: {
-        soft: "0 24px 60px rgba(21, 36, 29, 0.12)",
+        soft: "0 24px 60px rgb(var(--color-shadow) / 0.12)",
       },
       fontFamily: {
         sans: ["Space Grotesk", "Avenir Next", "Segoe UI", "sans-serif"],
         mono: ["IBM Plex Mono", "Menlo", "monospace"],
       },
       backgroundImage: {
-        "hero-grid": "linear-gradient(rgba(21,36,29,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(21,36,29,0.06) 1px, transparent 1px)",
+        "hero-grid":
+          "linear-gradient(rgb(var(--color-grid) / 0.06) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--color-grid) / 0.06) 1px, transparent 1px)",
       },
     },
   },

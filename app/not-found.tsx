@@ -17,16 +17,10 @@ export default function NotFound() {
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            href="/"
-            className="rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accentDark"
-          >
+          <Link href="/" className="theme-primary-button px-5 py-3 text-sm font-semibold">
             Browse all tools
           </Link>
-          <Link
-            href="/tools/json-formatter"
-            className="rounded-full border border-ink/15 bg-white/70 px-5 py-3 text-sm font-semibold text-ink transition hover:bg-white"
-          >
+          <Link href="/tools/json-formatter" className="theme-secondary-button px-5 py-3 text-sm font-semibold">
             Open JSON Formatter
           </Link>
         </div>

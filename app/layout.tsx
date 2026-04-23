@@ -3,6 +3,8 @@ import { ConsentBanner } from "@/components/consent-banner";
 import { GoogleAnalytics } from "@/components/google-analytics";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { ThemeController } from "@/components/theme-controller";
+import { getThemeBootstrapScript } from "@/lib/theme";
 import { createToolMetadata } from "@/lib/metadata";
 import "./globals.css";
 
@@ -18,13 +20,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="flex min-h-screen flex-col">
-        <GoogleAnalytics />
-        <SiteHeader />
-        {children}
-        <SiteFooter />
-        <ConsentBanner />
+        <script dangerouslySetInnerHTML={{ __html: getThemeBootstrapScript() }} />
+        <ThemeController>
+          <GoogleAnalytics />
+          <SiteHeader />
+          {children}
+          <SiteFooter />
+          <ConsentBanner />
+        </ThemeController>
       </body>
     </html>
   );
