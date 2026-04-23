@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { CopyButton } from "@/components/copy-button";
 
 function createBatch(size: number) {
@@ -10,8 +10,12 @@ function createBatch(size: number) {
 export function UUIDTool() {
   const [count, setCount] = useState(4);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [uuids, setUuids] = useState<string[]>([]);
 
-  const uuids = useMemo(() => createBatch(count), [count, refreshKey]);
+  useEffect(() => {
+    setUuids(createBatch(count));
+  }, [count, refreshKey]);
+
   const joined = uuids.join("\n");
 
   return (

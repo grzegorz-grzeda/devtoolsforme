@@ -4,3 +4,4 @@ out
 npm-debug.log*
 tsconfig.tsbuildinfo
 .env*.local
+.codex
