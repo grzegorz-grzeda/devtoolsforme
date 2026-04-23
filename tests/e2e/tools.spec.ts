@@ -218,6 +218,29 @@ test("MQTT client renders browser connection controls", async ({ page }) => {
   await expect(page.getByText(/TLS note:/i)).toBeVisible();
 });
 
+test("TLS key generator renders key generation controls", async ({ page }) => {
+  await page.goto("/tools/tls-key-generator");
+
+  await expect(page.getByRole("heading", { name: "TLS Key Generator" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^RSA$/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Generate/i })).toBeVisible();
+});
+
+test("certificate inspector parses PEM details", async ({ page }) => {
+  await page.goto("/tools/certificate-inspector");
+
+  await expect(page.getByText(/Serial number/i)).toBeVisible();
+  await expect(page.getByText(/SHA-256 fingerprint/i)).toBeVisible();
+});
+
+test("CSR generator renders subject fields", async ({ page }) => {
+  await page.goto("/tools/csr-generator");
+
+  await expect(page.getByRole("heading", { name: "CSR Generator" })).toBeVisible();
+  await expect(page.getByLabel(/Common name/i)).toHaveValue("devtoolsforme.local");
+  await expect(page.getByRole("button", { name: /Generate CSR/i })).toBeVisible();
+});
+
 test("S-record inspector parses records and validates checksums", async ({ page }) => {
   await page.goto("/tools/s-record-inspector");
 
