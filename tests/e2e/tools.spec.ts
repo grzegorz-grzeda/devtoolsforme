@@ -113,6 +113,100 @@ test("C array generator produces uint8_t output", async ({ page }) => {
   await expect(page.getByText(/0x4F, 0x4B/i)).toBeVisible();
 });
 
+test("memory viewer groups bytes with offsets and ASCII", async ({ page }) => {
+  await page.goto("/tools/memory-viewer");
+
+  const input = page.locator("textarea").first();
+  await input.click();
+  await page.keyboard.press("Control+A");
+  await input.fill("48656C6C6F");
+
+  await expect(page.getByText(/0x0000/i)).toBeVisible();
+  await expect(page.getByText(/48 65 6C 6C 6F/i)).toBeVisible();
+  await expect(page.getByText(/^Hello$/)).toBeVisible();
+});
+
+test("Modbus RTU helper appends CRC bytes", async ({ page }) => {
+  await page.goto("/tools/modbus-rtu-helper");
+
+  const inputs = page.locator("input");
+  await inputs.nth(0).fill("01");
+  await inputs.nth(1).fill("03");
+  await inputs.nth(2).fill("00 10 00 02");
+
+  await expect(page.getByText(/01 03 00 10 00 02/i)).toBeVisible();
+  await expect(page.getByText(/C5 CE/i)).toBeVisible();
+});
+
+test("fixed-point converter scales decimal into Q format", async ({ page }) => {
+  await page.goto("/tools/fixed-point-converter");
+
+  const input = page.locator("input").first();
+  await input.fill("1.5");
+
+  await expect(page.getByText(/Scaled integer/i)).toBeVisible();
+  await expect(page.getByText(/^49152$/).first()).toBeVisible();
+});
+
+test("register field builder packs a field into a register", async ({ page }) => {
+  await page.goto("/tools/register-field-builder");
+
+  const inputs = page.locator("input");
+  await inputs.nth(0).fill("0x12345678");
+  await inputs.nth(1).fill("0x3");
+  await inputs.nth(2).fill("8");
+  await inputs.nth(3).fill("2");
+
+  await expect(page.getByText(/Field mask/i)).toBeVisible();
+  await expect(page.getByText(/0x00000300/i).first()).toBeVisible();
+  await expect(page.getByText(/0x12345778/i)).toBeVisible();
+});
+
+test("PLL calculator derives final clock and period", async ({ page }) => {
+  await page.goto("/tools/pll-calculator");
+
+  const inputs = page.locator("input");
+  await inputs.nth(0).fill("8000000");
+  await inputs.nth(1).fill("1");
+  await inputs.nth(2).fill("9");
+  await inputs.nth(3).fill("2");
+
+  await expect(page.getByText(/^VCO output$/)).toBeVisible();
+  await expect(page.getByText(/36.000 MHz/i)).toBeVisible();
+  await expect(page.getByText(/27.778 ns/i)).toBeVisible();
+});
+
+test("DMA throughput calculator estimates transfer cost", async ({ page }) => {
+  await page.goto("/tools/dma-throughput-calculator");
+
+  const inputs = page.locator("input");
+  await inputs.nth(0).fill("120000000");
+  await inputs.nth(1).fill("32");
+  await inputs.nth(2).fill("4");
+  await inputs.nth(3).fill("2");
+  await inputs.nth(4).fill("4096");
+
+  await expect(page.getByText(/Bursts required/i)).toBeVisible();
+  await expect(page.getByText(/^256$/).first()).toBeVisible();
+  await expect(page.getByText(/320.000 MB\/s/i)).toBeVisible();
+});
+
+test("Intel HEX inspector parses records and absolute address", async ({ page }) => {
+  await page.goto("/tools/intel-hex-inspector");
+
+  await expect(page.getByText(/Checksum errors/i)).toBeVisible();
+  await expect(page.getByText(/0x08000000/i).first()).toBeVisible();
+  await expect(page.getByText(/Extended linear 0x0800/i)).toBeVisible();
+});
+
+test("S-record inspector parses records and validates checksums", async ({ page }) => {
+  await page.goto("/tools/s-record-inspector");
+
+  await expect(page.getByText(/Checksum errors/i)).toBeVisible();
+  await expect(page.getByText(/0x00000000/i).first()).toBeVisible();
+  await expect(page.getByText(/Header/i)).toBeVisible();
+});
+
 test("two's complement converter shows signed and unsigned views", async ({ page }) => {
   await page.goto("/tools/twos-complement");
 
