@@ -57,6 +57,6 @@ export const tools: ToolDefinition[] = [
   { slug: "lorem-generator", name: "Lorem Generator", description: "Generate placeholder paragraphs, sentences, and words for UI mocks and demos.", badge: "Content", category: "Content" },
   { slug: "http-status", name: "HTTP Status Lookup", description: "Search common HTTP response codes and read what they mean in practice.", badge: "Reference", category: "Reference" },
   { slug: "mime-lookup", name: "MIME Lookup", description: "Look up common file extensions and MIME types for headers, uploads, and assets.", badge: "Reference", category: "Reference" },
-  { slug: "color-converter", name: "Color Converter", description: "Convert hex colors into RGB and HSL with a live swatch preview.", badge: "Design", category: "Design" },
+  { slug: "color-converter", name: "Color Converter", description: "Convert HEX, RGB, and HSL colors into richer design-ready formats with live previews and palettes.", badge: "Design", category: "Design" },
   { slug: "color-contrast", name: "Color Contrast Checker", description: "Check foreground and background combinations against WCAG contrast thresholds.", badge: "Design", category: "Design" }
 ];
