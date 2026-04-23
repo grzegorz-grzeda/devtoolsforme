@@ -1,14 +1,1 @@
-import { HexCalculatorTool } from "@/components/hex-calculator-tool";
-import { ToolShell } from "@/components/tool-shell";
-
-export default function HexCalculatorPage() {
-  return (
-    <ToolShell
-      eyebrow="Number Systems"
-      title="Hex Calculator"
-      description="Translate values across decimal, hexadecimal, binary, and octal so you can inspect and compare formats quickly."
-    >
-      <HexCalculatorTool />
-    </ToolShell>
-  );
-}
+import type { Metadata } from "next";import { HexCalculatorTool } from "@/components/hex-calculator-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Hex Calculator", "Translate values across decimal, hexadecimal, binary, and octal so you can inspect and compare formats quickly.", "hex-calculator");export default function HexCalculatorPage() { return <ToolShell slug="hex-calculator" eyebrow="Number Systems" title="Hex Calculator" description="Translate values across decimal, hexadecimal, binary, and octal so you can inspect and compare formats quickly."><HexCalculatorTool /></ToolShell>; }

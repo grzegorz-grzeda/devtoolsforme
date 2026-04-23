@@ -1,14 +1,44 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ToolCard } from "@/components/tool-card";
 import type { ToolDefinition } from "@/lib/tools";
 
 const allCategory = "All";
+const favoritesKey = "dtfm-favorite-tools";
+const recentKey = "dtfm-recent-tools";
+
+function readList(key: string) {
+  try {
+    const raw = window.localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function mapTools(slugs: string[], tools: ToolDefinition[]) {
+  return slugs
+    .map((slug) => tools.find((tool) => tool.slug === slug))
+    .filter((tool): tool is ToolDefinition => Boolean(tool));
+}
 
 export function HomeToolBrowser({ tools }: { tools: ToolDefinition[] }) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState(allCategory);
+  const [favorites, setFavorites] = useState<ToolDefinition[]>([]);
+  const [recent, setRecent] = useState<ToolDefinition[]>([]);
+
+  useEffect(() => {
+    const sync = () => {
+      setFavorites(mapTools(readList(favoritesKey), tools));
+      setRecent(mapTools(readList(recentKey), tools));
+    };
+
+    sync();
+    window.addEventListener("tool-preferences-changed", sync);
+    return () => window.removeEventListener("tool-preferences-changed", sync);
+  }, [tools]);
 
   const categories = useMemo(
     () => [allCategory, ...Array.from(new Set(tools.map((tool) => tool.category)))],
@@ -79,6 +109,31 @@ export function HomeToolBrowser({ tools }: { tools: ToolDefinition[] }) {
           ))}
         </div>
       </div>
+
+      {(favorites.length > 0 || recent.length > 0) && (
+        <section className="grid gap-5 xl:grid-cols-2">
+          {favorites.length > 0 && (
+            <div className="rounded-[2rem] border border-white/60 bg-card p-5 shadow-soft backdrop-blur">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-lake/80">Favorites</p>
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                {favorites.map((tool) => (
+                  <ToolCard key={tool.slug} tool={tool} index={tools.findIndex((entry) => entry.slug === tool.slug)} />
+                ))}
+              </div>
+            </div>
+          )}
+          {recent.length > 0 && (
+            <div className="rounded-[2rem] border border-white/60 bg-card p-5 shadow-soft backdrop-blur">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-lake/80">Recently opened</p>
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                {recent.map((tool) => (
+                  <ToolCard key={tool.slug} tool={tool} index={tools.findIndex((entry) => entry.slug === tool.slug)} />
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
 
       {orderedGroups.length === 0 ? (
         <div className="rounded-[2rem] border border-dashed border-ink/15 bg-white/50 p-8 text-center">

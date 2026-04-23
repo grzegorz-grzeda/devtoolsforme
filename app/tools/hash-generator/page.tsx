@@ -1,14 +1,1 @@
-import { HashGeneratorTool } from "@/components/hash-generator-tool";
-import { ToolShell } from "@/components/tool-shell";
-
-export default function HashGeneratorPage() {
-  return (
-    <ToolShell
-      eyebrow="Identity"
-      title="Hash Generator"
-      description="Generate SHA-family digests locally in the browser for quick integrity checks and comparisons."
-    >
-      <HashGeneratorTool />
-    </ToolShell>
-  );
-}
+import type { Metadata } from "next";import { HashGeneratorTool } from "@/components/hash-generator-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Hash Generator", "Generate SHA-family digests locally in the browser for quick integrity checks and comparisons.", "hash-generator");export default function HashGeneratorPage() { return <ToolShell slug="hash-generator" eyebrow="Identity" title="Hash Generator" description="Generate SHA-family digests locally in the browser for quick integrity checks and comparisons."><HashGeneratorTool /></ToolShell>; }

@@ -1,14 +1,1 @@
-import { TimestampConverterTool } from "@/components/timestamp-converter-tool";
-import { ToolShell } from "@/components/tool-shell";
-
-export default function TimestampConverterPage() {
-  return (
-    <ToolShell
-      eyebrow="Time"
-      title="Timestamp Converter"
-      description="Translate timestamps into human-readable dates and turn dates back into Unix seconds or milliseconds."
-    >
-      <TimestampConverterTool />
-    </ToolShell>
-  );
-}
+import type { Metadata } from "next";import { TimestampConverterTool } from "@/components/timestamp-converter-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Timestamp Converter", "Translate timestamps into human-readable dates and turn dates back into Unix seconds or milliseconds.", "timestamp-converter");export default function TimestampConverterPage() { return <ToolShell slug="timestamp-converter" eyebrow="Time" title="Timestamp Converter" description="Translate timestamps into human-readable dates and turn dates back into Unix seconds or milliseconds."><TimestampConverterTool /></ToolShell>; }

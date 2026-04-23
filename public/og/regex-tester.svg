@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" rx="42" fill="#F7F3EB"/>
+  <circle cx="1060" cy="120" r="130" fill="#EF6C3D" fill-opacity="0.14"/>
+  <circle cx="160" cy="560" r="150" fill="#1F5460" fill-opacity="0.12"/>
+  <rect x="60" y="60" width="1080" height="510" rx="36" fill="#FFFCF7" stroke="#E7DED2"/>
+  <rect x="88" y="94" rx="24" ry="24" width="160" height="42" fill="#DCE5D3"/>
+  <text x="112" y="121" font-size="18" font-weight="700" letter-spacing="2.4" fill="#1F5460">TEXT</text>
+  <text x="88" y="168" font-size="18" font-weight="700" letter-spacing="5.4" fill="#1F5460">DEVTOOLSFORME</text>
+  <text x="88" y="210" font-size="56" font-weight="700" fill="#15241d">Regex Tester</text>
+  <text x="88" y="390" font-size="24" fill="#36524a">Test expressions against sample text, review flags,</text><text x="88" y="424" font-size="24" fill="#36524a">and inspect captured matches.</text>
+  <rect x="88" y="504" rx="24" ry="24" width="290" height="52" fill="#15241D"/>
+  <text x="116" y="537" font-size="24" font-weight="700" fill="#FFFFFF">browser-side utility</text>
+</svg>

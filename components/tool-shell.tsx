@@ -1,19 +1,24 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { FavoriteToolButton, ToolCopyLinkButton, ToolVisitTracker } from "@/components/tool-preferences";
 
 export function ToolShell({
+  slug,
   title,
   eyebrow,
   description,
   children,
 }: {
+  slug: string;
   title: string;
   eyebrow: string;
   description: string;
   children: ReactNode;
 }) {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8 md:px-10">
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-8 md:px-10">
+      <ToolVisitTracker slug={slug} />
+
       <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
         <Link
           href="/"
@@ -31,6 +36,10 @@ export function ToolShell({
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-lake/80">devtoolsforme</p>
           <h1 className="max-w-xl text-4xl font-bold tracking-tight text-ink md:text-6xl">{title}</h1>
           <p className="max-w-lg text-lg leading-8 text-ink/75">{description}</p>
+          <div className="flex flex-wrap gap-3">
+            <FavoriteToolButton slug={slug} />
+            <ToolCopyLinkButton title={title} />
+          </div>
         </div>
 
         <div className="rounded-[2rem] border border-white/70 bg-card p-5 shadow-soft backdrop-blur md:p-7">

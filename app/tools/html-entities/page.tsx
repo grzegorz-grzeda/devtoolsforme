@@ -1,14 +1,1 @@
-import { HTMLEntitiesTool } from "@/components/html-entities-tool";
-import { ToolShell } from "@/components/tool-shell";
-
-export default function HTMLEntitiesPage() {
-  return (
-    <ToolShell
-      eyebrow="Encoding"
-      title="HTML Entity Tool"
-      description="Encode raw markup safely or decode escaped entities back into readable HTML and text."
-    >
-      <HTMLEntitiesTool />
-    </ToolShell>
-  );
-}
+import type { Metadata } from "next";import { HTMLEntitiesTool } from "@/components/html-entities-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("HTML Entity Tool", "Encode raw markup safely or decode escaped entities back into readable HTML and text.", "html-entities");export default function HTMLEntitiesPage() { return <ToolShell slug="html-entities" eyebrow="Encoding" title="HTML Entity Tool" description="Encode raw markup safely or decode escaped entities back into readable HTML and text."><HTMLEntitiesTool /></ToolShell>; }
