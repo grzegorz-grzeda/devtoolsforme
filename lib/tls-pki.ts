@@ -108,7 +108,10 @@ export function inspectCertificatePem(pem: string) {
   const cert = forge.pki.certificateFromPem(pem);
   const sanExtension = cert.extensions.find((extension) => extension.name === "subjectAltName");
   const altNames = sanExtension && "altNames" in sanExtension && Array.isArray(sanExtension.altNames)
-    ? sanExtension.altNames.map((entry: { value?: string; ip?: string }) => entry.value ?? entry.ip ?? "").filter(Boolean)
+    ? sanExtension.altNames.map((entry: { type?: number; value?: string; ip?: string }) => {
+      if (entry.type === 7) return entry.ip ?? entry.value ?? "";
+      return entry.value ?? entry.ip ?? "";
+    }).filter(Boolean)
     : [];
 
   return {
