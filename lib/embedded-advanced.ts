@@ -24,6 +24,149 @@ export function parseHexPairs(input: string) {
   return pairs.filter((pair) => pair.length === 2).map((pair) => Number.parseInt(pair, 16));
 }
 
+export function wordToBytes(value: number) {
+  const normalized = value & 0xffff;
+  return [(normalized >> 8) & 0xff, normalized & 0xff];
+}
+
+export function parseBooleanList(input: string) {
+  return input
+    .split(/[^01]+/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((item) => item === "1");
+}
+
+export function parseWordList(input: string) {
+  return input
+    .split(/[\s,;]+/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((item) => parseNumericInput(item))
+    .filter((value): value is number => value !== null)
+    .map((value) => value & 0xffff);
+}
+
+export function packCoils(values: boolean[]) {
+  const bytes = new Array<number>(Math.ceil(values.length / 8)).fill(0);
+  values.forEach((value, index) => {
+    if (!value) return;
+    bytes[Math.floor(index / 8)] |= 1 << (index % 8);
+  });
+  return bytes;
+}
+
+export function unpackCoils(bytes: number[], count: number) {
+  return Array.from({ length: count }, (_, index) => {
+    const byte = bytes[Math.floor(index / 8)] ?? 0;
+    return ((byte >> (index % 8)) & 1) === 1;
+  });
+}
+
+export type ModbusRequestKind =
+  | "read-coils"
+  | "read-discrete-inputs"
+  | "read-holding-registers"
+  | "read-input-registers"
+  | "write-single-coil"
+  | "write-single-register"
+  | "write-multiple-coils"
+  | "write-multiple-registers"
+  | "custom";
+
+export type ModbusRequestConfig = {
+  kind: ModbusRequestKind;
+  startAddress?: number;
+  quantity?: number;
+  coilValue?: boolean;
+  registerValue?: number;
+  coilValues?: boolean[];
+  registerValues?: number[];
+  customPayload?: string;
+};
+
+export function buildModbusRequestPayload(config: ModbusRequestConfig) {
+  const { kind } = config;
+  if (kind === "custom") return { functionCode: null, payloadBytes: parseHexPairs(config.customPayload ?? "") };
+
+  const startAddress = config.startAddress ?? 0;
+  const quantity = config.quantity ?? 0;
+
+  switch (kind) {
+    case "read-coils":
+      return { functionCode: 0x01, payloadBytes: [...wordToBytes(startAddress), ...wordToBytes(quantity)] };
+    case "read-discrete-inputs":
+      return { functionCode: 0x02, payloadBytes: [...wordToBytes(startAddress), ...wordToBytes(quantity)] };
+    case "read-holding-registers":
+      return { functionCode: 0x03, payloadBytes: [...wordToBytes(startAddress), ...wordToBytes(quantity)] };
+    case "read-input-registers":
+      return { functionCode: 0x04, payloadBytes: [...wordToBytes(startAddress), ...wordToBytes(quantity)] };
+    case "write-single-coil":
+      return { functionCode: 0x05, payloadBytes: [...wordToBytes(startAddress), ...(config.coilValue ? [0xff, 0x00] : [0x00, 0x00])] };
+    case "write-single-register":
+      return { functionCode: 0x06, payloadBytes: [...wordToBytes(startAddress), ...wordToBytes(config.registerValue ?? 0)] };
+    case "write-multiple-coils": {
+      const values = config.coilValues ?? [];
+      const packed = packCoils(values);
+      return {
+        functionCode: 0x0f,
+        payloadBytes: [...wordToBytes(startAddress), ...wordToBytes(values.length), packed.length, ...packed],
+      };
+    }
+    case "write-multiple-registers": {
+      const values = config.registerValues ?? [];
+      return {
+        functionCode: 0x10,
+        payloadBytes: [...wordToBytes(startAddress), ...wordToBytes(values.length), values.length * 2, ...values.flatMap((value) => wordToBytes(value))],
+      };
+    }
+  }
+}
+
+export function validateModbusRequestConfig(config: ModbusRequestConfig) {
+  const issues: string[] = [];
+
+  if (config.kind === "custom") {
+    if ((config.customPayload ?? "").trim().length === 0) issues.push("Enter payload bytes for the custom request.");
+    return issues;
+  }
+
+  if (config.startAddress === undefined || config.startAddress < 0 || config.startAddress > 0xffff) {
+    issues.push("Start address must be between 0 and 65535.");
+  }
+
+  if (
+    config.kind === "read-coils" ||
+    config.kind === "read-discrete-inputs" ||
+    config.kind === "read-holding-registers" ||
+    config.kind === "read-input-registers"
+  ) {
+    if (!config.quantity || config.quantity <= 0 || config.quantity > 125) {
+      issues.push("Quantity must be between 1 and 125 for register/bit reads.");
+    }
+  }
+
+  if (config.kind === "write-single-register") {
+    if (config.registerValue === undefined || config.registerValue < 0 || config.registerValue > 0xffff) {
+      issues.push("Register value must be between 0 and 65535.");
+    }
+  }
+
+  if (config.kind === "write-multiple-coils") {
+    const values = config.coilValues ?? [];
+    if (values.length === 0) issues.push("Enter at least one coil value.");
+    if (values.length > 1968) issues.push("Write multiple coils supports up to 1968 coil values per request.");
+  }
+
+  if (config.kind === "write-multiple-registers") {
+    const values = config.registerValues ?? [];
+    if (values.length === 0) issues.push("Enter at least one register value.");
+    if (values.length > 123) issues.push("Write multiple registers supports up to 123 registers per request.");
+  }
+
+  return issues;
+}
+
 export function bytesToCArray(name: string, bytes: number[], columns = 12) {
   const safeName = name.trim() || "payload";
   if (bytes.length === 0) return `const uint8_t ${safeName}[] = {};

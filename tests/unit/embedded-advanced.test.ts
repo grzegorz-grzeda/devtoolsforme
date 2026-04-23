@@ -1,18 +1,25 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildModbusRequestPayload,
   bytesToCArray,
   convertImageDataToMonochromeBytes,
   convertImageDataToSsd1309Bytes,
   formatHex,
   groupHexBytes,
+  packCoils,
   packHorizontalBytes,
   packMonochromeBytes,
   packSsd1309Bytes,
+  parseBooleanList,
   parseHexPairs,
   parseIntelHex,
   parseNumericInput,
   parseSRecord,
+  parseWordList,
   rgbaToMonochromePixels,
+  unpackCoils,
+  validateModbusRequestConfig,
+  wordToBytes,
 } from "../../lib/embedded-advanced";
 
 describe("parseNumericInput", () => {
@@ -39,6 +46,53 @@ describe("formatting helpers", () => {
   it("formats byte arrays as C source", () => {
     expect(bytesToCArray("logo", [0x01, 0xab, 0xff], 2)).toBe(
       "const uint8_t logo[] = {\n  0x01, 0xAB,\n  0xFF\n};",
+    );
+  });
+
+  it("parses and formats Modbus helper values", () => {
+    expect(wordToBytes(0x1234)).toEqual([0x12, 0x34]);
+    expect(parseBooleanList("1 0,1;1")).toEqual([true, false, true, true]);
+    expect(parseWordList("1 0x10 0b11")).toEqual([1, 16, 3]);
+    expect(packCoils([true, false, true, true, false, false, false, false, true])).toEqual([0x0d, 0x01]);
+    expect(unpackCoils([0x0d, 0x01], 9)).toEqual([true, false, true, true, false, false, false, false, true]);
+  });
+});
+
+describe("modbus request builder", () => {
+  it("builds read register requests", () => {
+    expect(buildModbusRequestPayload({ kind: "read-holding-registers", startAddress: 0x0010, quantity: 2 })).toEqual({
+      functionCode: 0x03,
+      payloadBytes: [0x00, 0x10, 0x00, 0x02],
+    });
+  });
+
+  it("builds multi-write requests", () => {
+    expect(buildModbusRequestPayload({ kind: "write-multiple-coils", startAddress: 0x0013, coilValues: [true, false, true, true, false, false, false, false, true] })).toEqual({
+      functionCode: 0x0f,
+      payloadBytes: [0x00, 0x13, 0x00, 0x09, 0x02, 0x0d, 0x01],
+    });
+    expect(buildModbusRequestPayload({ kind: "write-multiple-registers", startAddress: 0x0002, registerValues: [0x1234, 0xabcd] })).toEqual({
+      functionCode: 0x10,
+      payloadBytes: [0x00, 0x02, 0x00, 0x02, 0x04, 0x12, 0x34, 0xab, 0xcd],
+    });
+  });
+
+  it("passes through custom payload bytes", () => {
+    expect(buildModbusRequestPayload({ kind: "custom", customPayload: "00 10 00 02" })).toEqual({
+      functionCode: null,
+      payloadBytes: [0x00, 0x10, 0x00, 0x02],
+    });
+  });
+
+  it("validates common request limits", () => {
+    expect(validateModbusRequestConfig({ kind: "read-holding-registers", startAddress: 0, quantity: 126 })).toContain(
+      "Quantity must be between 1 and 125 for register/bit reads.",
+    );
+    expect(validateModbusRequestConfig({ kind: "write-multiple-coils", startAddress: 0, coilValues: [] })).toContain(
+      "Enter at least one coil value.",
+    );
+    expect(validateModbusRequestConfig({ kind: "write-multiple-registers", startAddress: 0, registerValues: new Array(124).fill(0) })).toContain(
+      "Write multiple registers supports up to 123 registers per request.",
     );
   });
 });

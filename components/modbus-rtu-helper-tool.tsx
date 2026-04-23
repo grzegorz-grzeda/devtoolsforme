@@ -1,7 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { groupHexBytes, parseHexPairs } from "@/lib/embedded-advanced";
+import {
+  buildModbusRequestPayload,
+  groupHexBytes,
+  parseBooleanList,
+  parseHexPairs,
+  parseNumericInput,
+  parseWordList,
+  type ModbusRequestKind,
+  unpackCoils,
+  validateModbusRequestConfig,
+} from "@/lib/embedded-advanced";
 
 type SerialParity = "none" | "even" | "odd";
 
@@ -31,6 +41,18 @@ const serialPresets = [
   { id: "19200-8e1", label: "19200 8E1", baudRate: "19200", dataBits: 8 as const, parity: "even" as const, stopBits: 1 as const },
   { id: "38400-8n1", label: "38400 8N1", baudRate: "38400", dataBits: 8 as const, parity: "none" as const, stopBits: 1 as const },
   { id: "115200-8n1", label: "115200 8N1", baudRate: "115200", dataBits: 8 as const, parity: "none" as const, stopBits: 1 as const },
+];
+
+const modbusFunctionOptions: { value: ModbusRequestKind; label: string; note: string }[] = [
+  { value: "read-coils", label: "01 Read Coils", note: "Read packed coil status bits." },
+  { value: "read-discrete-inputs", label: "02 Read Discrete Inputs", note: "Read packed input status bits." },
+  { value: "read-holding-registers", label: "03 Read Holding Registers", note: "Read one or more holding registers." },
+  { value: "read-input-registers", label: "04 Read Input Registers", note: "Read one or more input registers." },
+  { value: "write-single-coil", label: "05 Write Single Coil", note: "Force one coil ON or OFF." },
+  { value: "write-single-register", label: "06 Write Single Register", note: "Write one 16-bit register." },
+  { value: "write-multiple-coils", label: "0F Write Multiple Coils", note: "Write a sequence of coil bits." },
+  { value: "write-multiple-registers", label: "10 Write Multiple Registers", note: "Write a sequence of 16-bit registers." },
+  { value: "custom", label: "Custom raw payload", note: "Enter function and payload bytes manually." },
 ];
 
 function modbusExceptionLabel(code: number) {
@@ -79,6 +101,14 @@ function decodeModbusResponse(request: number[] | null, responseBytes: number[])
     const data = responseBytes.slice(3, 3 + byteCount);
     lines.push(`Byte count: ${byteCount}`);
     lines.push(`Data: ${groupHexBytes(data) || "none"}`);
+
+    if ((functionId === 0x01 || functionId === 0x02) && request && request.length >= 6) {
+      const requestedCount = (request[4] << 8) | request[5];
+      const bits = unpackCoils(data, requestedCount);
+      if (bits.length > 0) {
+        lines.push(`Bits: ${bits.map((value, index) => `${index}:${value ? "ON" : "OFF"}`).join(", ")}`);
+      }
+    }
 
     if (functionId === 0x03 || functionId === 0x04) {
       const registers: string[] = [];
@@ -145,8 +175,15 @@ async function readWithTimeout(port: SerialPortHandle, timeoutMs: number) {
 export function ModbusRTUHelperTool() {
   const [preset, setPreset] = useState(serialPresets[0]?.id ?? "custom");
   const [slave, setSlave] = useState("01");
+  const [requestKind, setRequestKind] = useState<ModbusRequestKind>("read-holding-registers");
   const [functionCode, setFunctionCode] = useState("03");
   const [payload, setPayload] = useState("00 10 00 02");
+  const [startAddress, setStartAddress] = useState("0x0010");
+  const [quantity, setQuantity] = useState("2");
+  const [singleCoilValue, setSingleCoilValue] = useState(true);
+  const [singleRegisterValue, setSingleRegisterValue] = useState("0x1234");
+  const [coilList, setCoilList] = useState("1 0 1 1 0 0 0 0");
+  const [registerList, setRegisterList] = useState("0x1234 0x5678");
   const [baudRate, setBaudRate] = useState("9600");
   const [dataBits, setDataBits] = useState<7 | 8>(8);
   const [stopBits, setStopBits] = useState<1 | 2>(1);
@@ -162,13 +199,54 @@ export function ModbusRTUHelperTool() {
 
   const serialApi = typeof navigator === "undefined" ? undefined : (navigator as SerialNavigator).serial;
 
+  const requestDefinition = useMemo(() => {
+    if (requestKind === "custom") {
+      return {
+        functionCode: parseNumericInput(functionCode),
+        payloadBytes: parseHexPairs(payload),
+        note: modbusFunctionOptions.find((option) => option.value === requestKind)?.note ?? "",
+      };
+    }
+
+    const start = parseNumericInput(startAddress);
+    const count = parseNumericInput(quantity);
+    const built = buildModbusRequestPayload({
+      kind: requestKind,
+      startAddress: start ?? 0,
+      quantity: count ?? 0,
+      coilValue: singleCoilValue,
+      registerValue: parseNumericInput(singleRegisterValue) ?? 0,
+      coilValues: parseBooleanList(coilList),
+      registerValues: parseWordList(registerList),
+    });
+
+    return {
+      ...built,
+      note: modbusFunctionOptions.find((option) => option.value === requestKind)?.note ?? "",
+    };
+  }, [coilList, functionCode, payload, quantity, registerList, requestKind, singleCoilValue, singleRegisterValue, startAddress]);
+
+  const requestValidation = useMemo(() => validateModbusRequestConfig({
+    kind: requestKind,
+    startAddress: parseNumericInput(startAddress) ?? undefined,
+    quantity: parseNumericInput(quantity) ?? undefined,
+    coilValue: singleCoilValue,
+    registerValue: parseNumericInput(singleRegisterValue) ?? undefined,
+    coilValues: parseBooleanList(coilList),
+    registerValues: parseWordList(registerList),
+    customPayload: payload,
+  }), [coilList, payload, quantity, registerList, requestKind, singleCoilValue, singleRegisterValue, startAddress]);
+
   const frameBytes = useMemo(() => {
-    const body = `${slave} ${functionCode} ${payload}`;
-    const bytes = parseHexPairs(body);
+    const slaveValue = parseNumericInput(slave);
+    if (slaveValue === null) return null;
+    const currentFunctionCode = requestDefinition.functionCode;
+    if (currentFunctionCode === null || currentFunctionCode === undefined) return null;
+    const bytes = [slaveValue & 0xff, currentFunctionCode & 0xff, ...requestDefinition.payloadBytes];
     if (bytes.length < 2) return null;
     const crc = crc16Modbus(bytes);
     return [...bytes, crc & 0xff, (crc >> 8) & 0xff];
-  }, [functionCode, payload, slave]);
+  }, [requestDefinition, slave]);
 
   const frame = useMemo(() => {
     if (!frameBytes) return null;
@@ -243,6 +321,10 @@ export function ModbusRTUHelperTool() {
       setTransportStatus("Enter a valid Modbus RTU frame first.");
       return;
     }
+    if (requestValidation.length > 0) {
+      setTransportStatus(requestValidation[0] ?? "Fix the request fields before sending.");
+      return;
+    }
 
     const timeout = Number(timeoutMs);
     if (!Number.isFinite(timeout) || timeout <= 0) {
@@ -281,13 +363,32 @@ export function ModbusRTUHelperTool() {
     }
   }
 
+  const canSendFrame = !!port && !!frameBytes && requestValidation.length === 0 && !isSending && !isConnecting;
+
   return (
     <div className="space-y-5">
       <div className="grid gap-4 md:grid-cols-3">
         <label className="block space-y-2 text-sm font-semibold text-ink/80">Slave<input value={slave} onChange={(event) => setSlave(event.target.value)} className="w-full rounded-2xl border border-ink/10 bg-white/90 px-4 py-3 font-mono text-sm outline-none transition focus:border-accent" /></label>
-        <label className="block space-y-2 text-sm font-semibold text-ink/80">Function<input value={functionCode} onChange={(event) => setFunctionCode(event.target.value)} className="w-full rounded-2xl border border-ink/10 bg-white/90 px-4 py-3 font-mono text-sm outline-none transition focus:border-accent" /></label>
-        <label className="block space-y-2 text-sm font-semibold text-ink/80">Payload<input value={payload} onChange={(event) => setPayload(event.target.value)} className="w-full rounded-2xl border border-ink/10 bg-white/90 px-4 py-3 font-mono text-sm outline-none transition focus:border-accent" /></label>
+        <label className="block space-y-2 text-sm font-semibold text-ink/80">Function<select value={requestKind} onChange={(event) => setRequestKind(event.target.value as ModbusRequestKind)} className="w-full rounded-2xl border border-ink/10 bg-white/90 px-4 py-3 text-sm outline-none transition focus:border-accent">{modbusFunctionOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
+        <div className="rounded-2xl border border-ink/10 bg-white/70 px-4 py-3 text-sm text-ink/75"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-lake">Function note</p><p className="mt-2">{requestDefinition.note}</p></div>
       </div>
+      {requestKind === "custom" ? (
+        <div className="grid gap-4 md:grid-cols-2">
+          <label className="block space-y-2 text-sm font-semibold text-ink/80">Function code<input value={functionCode} onChange={(event) => setFunctionCode(event.target.value)} className="w-full rounded-2xl border border-ink/10 bg-white/90 px-4 py-3 font-mono text-sm outline-none transition focus:border-accent" /></label>
+          <label className="block space-y-2 text-sm font-semibold text-ink/80">Payload bytes<input value={payload} onChange={(event) => setPayload(event.target.value)} className="w-full rounded-2xl border border-ink/10 bg-white/90 px-4 py-3 font-mono text-sm outline-none transition focus:border-accent" /></label>
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {(requestKind === "read-coils" || requestKind === "read-discrete-inputs" || requestKind === "read-holding-registers" || requestKind === "read-input-registers" || requestKind === "write-single-coil" || requestKind === "write-single-register" || requestKind === "write-multiple-coils" || requestKind === "write-multiple-registers") ? <label className="block space-y-2 text-sm font-semibold text-ink/80">Start address<input value={startAddress} onChange={(event) => setStartAddress(event.target.value)} className="w-full rounded-2xl border border-ink/10 bg-white/90 px-4 py-3 font-mono text-sm outline-none transition focus:border-accent" /></label> : null}
+          {(requestKind === "read-coils" || requestKind === "read-discrete-inputs" || requestKind === "read-holding-registers" || requestKind === "read-input-registers") ? <label className="block space-y-2 text-sm font-semibold text-ink/80">Quantity<input value={quantity} onChange={(event) => setQuantity(event.target.value)} className="w-full rounded-2xl border border-ink/10 bg-white/90 px-4 py-3 font-mono text-sm outline-none transition focus:border-accent" /></label> : null}
+          {requestKind === "write-single-coil" ? <label className="flex items-center gap-3 rounded-2xl border border-ink/10 bg-white/80 px-4 py-3 text-sm font-semibold text-ink/80"><input type="checkbox" checked={singleCoilValue} onChange={(event) => setSingleCoilValue(event.target.checked)} className="h-4 w-4 accent-accent" />Write coil ON</label> : null}
+          {requestKind === "write-single-register" ? <label className="block space-y-2 text-sm font-semibold text-ink/80">Register value<input value={singleRegisterValue} onChange={(event) => setSingleRegisterValue(event.target.value)} className="w-full rounded-2xl border border-ink/10 bg-white/90 px-4 py-3 font-mono text-sm outline-none transition focus:border-accent" /></label> : null}
+          {requestKind === "write-multiple-coils" ? <label className="block space-y-2 text-sm font-semibold text-ink/80 md:col-span-2">Coil values<textarea value={coilList} onChange={(event) => setCoilList(event.target.value)} rows={3} className="min-h-[96px] w-full rounded-[1.4rem] border border-ink/10 bg-white/80 px-4 py-4 font-mono text-sm outline-none transition focus:border-accent" /></label> : null}
+          {requestKind === "write-multiple-registers" ? <label className="block space-y-2 text-sm font-semibold text-ink/80 md:col-span-2">Register values<textarea value={registerList} onChange={(event) => setRegisterList(event.target.value)} rows={3} className="min-h-[96px] w-full rounded-[1.4rem] border border-ink/10 bg-white/80 px-4 py-4 font-mono text-sm outline-none transition focus:border-accent" /></label> : null}
+        </div>
+      )}
+      <div className="rounded-[1.4rem] border border-ink/10 bg-canvas p-4 text-sm text-ink/75"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-lake">Payload preview</p><p className="mt-2 font-mono text-ink">{requestDefinition.payloadBytes.length > 0 ? groupHexBytes(requestDefinition.payloadBytes) : "No payload bytes yet."}</p></div>
+      {requestValidation.length > 0 ? <div className="rounded-[1.4rem] border border-[#f2b8a4] bg-[#fff3ed] p-4 text-sm text-accentDark"><p className="text-xs font-semibold uppercase tracking-[0.18em]">Request checks</p><div className="mt-2 space-y-1">{requestValidation.map((issue) => <p key={issue}>{issue}</p>)}</div></div> : <div className="rounded-[1.4rem] border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">Request fields look valid for the selected Modbus function.</div>}
       <div className="rounded-[1.4rem] border border-ink/10 bg-white/70 p-4"><p className="text-xs font-semibold uppercase tracking-[0.2em] text-lake">Frame with CRC (little-endian CRC bytes)</p><p className="mt-2 font-mono text-sm text-ink">{frame ?? "Enter at least slave + function bytes"}</p></div>
       <div className="rounded-[1.4rem] border border-ink/10 bg-white/70 p-4">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -311,7 +412,7 @@ export function ModbusRTUHelperTool() {
         </div>
 
         <div className="mt-4 flex flex-wrap gap-3">
-          <button type="button" onClick={handleSend} disabled={!port || !frameBytes || isSending || isConnecting} className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-accentDark disabled:cursor-not-allowed disabled:opacity-60">{isSending ? "Sending..." : "Send request"}</button>
+          <button type="button" onClick={handleSend} disabled={!canSendFrame} className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-accentDark disabled:cursor-not-allowed disabled:opacity-60">{isSending ? "Sending..." : "Send request"}</button>
           {lastDurationMs !== null ? <div className="rounded-full border border-ink/10 bg-white px-3 py-2 text-sm text-ink/75">Round trip: <span className="font-mono">{lastDurationMs} ms</span></div> : null}
         </div>
 
