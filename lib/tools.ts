@@ -21,7 +21,7 @@ export const tools: ToolDefinition[] = [
   { slug: "fixed-point-converter", name: "Fixed-Point Converter", description: "Convert decimal values into scaled fixed-point integers using configurable Q formats.", badge: "Embedded", category: "Embedded" },
   { slug: "timer-prescaler", name: "Timer Prescaler Calculator", description: "Estimate timer tick periods, interrupt intervals, and resulting frequencies.", badge: "Embedded", category: "Embedded" },
   { slug: "can-frame-helper", name: "CAN Frame Helper", description: "Inspect simple CAN ID, frame type, DLC, and data byte layouts.", badge: "Embedded", category: "Embedded" },
-  { slug: "modbus-rtu-helper", name: "Modbus RTU Helper", description: "Assemble simple Modbus RTU frames and append the correct CRC bytes.", badge: "Embedded", category: "Embedded" },
+  { slug: "modbus-rtu-helper", name: "Modbus RTU Helper", description: "Build Modbus RTU frames, append CRC bytes, and exchange them over a local serial port.", badge: "Embedded", category: "Embedded" },
   { slug: "spi-i2c-cheatsheet", name: "SPI I2C Cheatsheet", description: "Reference SPI modes, convert I2C addresses, and estimate practical pull-up values.", badge: "Embedded", category: "Embedded" },
   { slug: "logic-level-converter", name: "Logic Level ADC DAC Converter", description: "Translate voltages into ADC counts and back using your selected reference.", badge: "Embedded", category: "Embedded" },
   { slug: "embedded-unit-converter", name: "Embedded Unit Converter", description: "Convert between Hz, kHz, MHz and ns, us, ms for common firmware calculations.", badge: "Embedded", category: "Embedded" },
