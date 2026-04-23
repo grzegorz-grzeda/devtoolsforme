@@ -2,6 +2,8 @@ import Link from "next/link";
 import { HomeToolBrowser } from "@/components/home-tool-browser";
 import { tools } from "@/lib/tools";
 
+const embeddedCount = tools.filter((tool) => tool.category === "Embedded").length;
+
 export default function Home() {
   return (
     <main className="mx-auto min-h-screen max-w-6xl flex-1 px-6 py-8 md:px-10 md:py-10">
@@ -18,10 +20,10 @@ export default function Home() {
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-ink/75">
               Run common developer tasks directly in the browser: format data, inspect tokens, convert
-              values, compare text, and generate placeholders without losing momentum.
+              values, compare text, generate placeholders, and now handle embedded-firmware chores without leaving the tab.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/tools/json-formatter" className="rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accentDark">Open a popular tool</Link>
+              <Link href="/tools/bitmask-calculator" className="rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accentDark">Open Embedded tools</Link>
               <Link href="mailto:hello@devtoolsforme.com?subject=devtoolsforme%20feedback" className="rounded-full border border-ink/15 bg-white/70 px-5 py-3 text-sm font-semibold text-ink transition hover:bg-white">Request a tool or send feedback</Link>
             </div>
           </div>
@@ -30,8 +32,8 @@ export default function Home() {
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-white/60">Toolkit now includes</p>
             <ul className="mt-5 space-y-4 text-sm leading-7 text-white/85">
               <li>{tools.length} browser-first tools with no backend dependency</li>
-              <li>Usage-aware sections like favorites, recents, and local popularity</li>
-              <li>Trust pages, feedback path, and privacy-first analytics controls</li>
+              <li>{embeddedCount} dedicated embedded and firmware helpers</li>
+              <li>Usage-aware sections, trust pages, and privacy-first analytics controls</li>
             </ul>
           </div>
         </div>
@@ -40,7 +42,7 @@ export default function Home() {
       <section className="mt-10 flex items-center justify-between gap-4">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-lake/80">Tool library</p>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-ink">Everything in one lightweight workspace</h2>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-ink">General-purpose utilities plus a featured embedded workspace</h2>
         </div>
         <p className="max-w-md text-sm leading-7 text-ink/65">
           Pick a tool card and jump straight into the task. Everything here runs client-side for speed and privacy.

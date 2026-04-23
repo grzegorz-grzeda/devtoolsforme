@@ -44,6 +44,52 @@ test("JSON formatter pretty-prints JSON", async ({ page }) => {
   await expect(page.locator("pre").first()).toContainText('"tools": [');
 });
 
+test("bitmask calculator computes register operations", async ({ page }) => {
+  await page.goto("/tools/bitmask-calculator");
+
+  const inputs = page.locator("input");
+  await inputs.nth(0).fill("0x5A");
+  await inputs.nth(1).fill("0x0F");
+
+  await expect(page.getByText(/Bits selected by mask/i)).toBeVisible();
+  await expect(page.getByText(/BIT3, BIT2, BIT1, BIT0/i)).toBeVisible();
+  await expect(page.getByText(/0x5F/i).first()).toBeVisible();
+  await expect(page.getByText(/0x50/i).first()).toBeVisible();
+});
+
+test("CRC calculator produces a checksum", async ({ page }) => {
+  await page.goto("/tools/crc-calculator");
+
+  const input = page.locator("textarea").first();
+  await input.click();
+  await page.keyboard.press("Control+A");
+  await input.fill("ABC");
+
+  await expect(page.getByText(/crc32/i)).toBeVisible();
+  await expect(page.getByText(/0xA3830348/i)).toBeVisible();
+});
+
+test("endianness converter flips byte order", async ({ page }) => {
+  await page.goto("/tools/endianness-converter");
+
+  const input = page.locator("input").first();
+  await input.fill("1234ABCD");
+
+  await expect(page.getByText(/12 34 AB CD/i)).toBeVisible();
+  await expect(page.getByText(/CD AB 34 12/i)).toBeVisible();
+});
+
+test("two's complement converter shows signed and unsigned views", async ({ page }) => {
+  await page.goto("/tools/twos-complement");
+
+  await page.getByRole("button", { name: /8-bit/i }).click();
+  await page.locator("input").first().fill("255");
+
+  await expect(page.getByText(/^255$/).first()).toBeVisible();
+  await expect(page.getByText(/^-1$/).first()).toBeVisible();
+  await expect(page.getByText(/0xFF/i)).toBeVisible();
+});
+
 test("consent banner persists acceptance and recently opened tools appear on homepage", async ({ page, context }) => {
   await page.goto("/");
 

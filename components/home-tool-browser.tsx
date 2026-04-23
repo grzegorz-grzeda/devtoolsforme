@@ -6,6 +6,7 @@ import { readStoredCounts, readStoredList, toolPreferenceKeys } from "@/componen
 import type { ToolDefinition } from "@/lib/tools";
 
 const allCategory = "All";
+const featuredCategory = "Embedded";
 
 function mapTools(slugs: string[], tools: ToolDefinition[]) {
   return slugs
@@ -42,6 +43,11 @@ export function HomeToolBrowser({ tools }: { tools: ToolDefinition[] }) {
     [tools]
   );
 
+  const featuredTools = useMemo(
+    () => tools.filter((tool) => tool.category === featuredCategory).slice(0, 6),
+    [tools]
+  );
+
   const filteredTools = useMemo(() => {
     const normalized = query.trim().toLowerCase();
 
@@ -73,6 +79,28 @@ export function HomeToolBrowser({ tools }: { tools: ToolDefinition[] }) {
 
   return (
     <section className="mt-6 space-y-8">
+      <section className="overflow-hidden rounded-[2rem] border border-white/60 bg-ink p-6 text-white shadow-soft">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-white/60">Featured track</p>
+            <h3 className="mt-3 text-3xl font-bold tracking-tight">Embedded tools that save real firmware time</h3>
+            <p className="mt-4 max-w-xl text-sm leading-7 text-white/80">
+              Registers, bytes, timing, CRCs, float inspection, two&apos;s complement, protocol helpers, and more. The embedded category is now a serious workspace instead of just a side note.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
+              <span>{tools.filter((tool) => tool.category === featuredCategory).length} embedded tools</span>
+              <span>Browser-first</span>
+              <span>Firmware workflow ready</span>
+            </div>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {featuredTools.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} index={tools.findIndex((entry) => entry.slug === tool.slug)} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       <div className="rounded-[2rem] border border-white/60 bg-card p-5 shadow-soft backdrop-blur md:p-6">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
           <label className="block space-y-2 text-sm font-semibold text-ink/80">
@@ -81,7 +109,7 @@ export function HomeToolBrowser({ tools }: { tools: ToolDefinition[] }) {
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Find JSON, regex, encoding, timestamps..."
+              placeholder="Find embedded, JSON, regex, encoding, timestamps..."
               className="w-full rounded-2xl border border-ink/10 bg-white/90 px-4 py-3 text-sm text-ink outline-none transition focus:border-accent"
             />
           </label>
