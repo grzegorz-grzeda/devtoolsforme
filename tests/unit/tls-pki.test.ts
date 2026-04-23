@@ -49,6 +49,7 @@ describe("tls-pki helpers", () => {
 
     const csr = forge.pki.certificationRequestFromPem(generated.csrPem);
     const subject = Object.fromEntries(csr.subject.attributes.map((attribute) => [attribute.name ?? attribute.shortName ?? "", attribute.value]));
+    const state = csr.subject.attributes.find((attribute) => attribute.shortName === "ST")?.value;
     const extensionRequest = csr.getAttribute({ name: "extensionRequest" }) as { extensions?: Array<{ name?: string; altNames?: Array<{ type: number; value?: string; ip?: string }> }> } | null;
     const sanExtension = extensionRequest?.extensions?.find((extension) => extension.name === "subjectAltName");
 
@@ -60,14 +61,13 @@ describe("tls-pki helpers", () => {
       organizationName: "Acme Corp",
       organizationalUnitName: "Platform",
       countryName: "US",
-      ST: "Illinois",
       localityName: "Chicago",
     });
-    expect(sanExtension?.altNames).toEqual([
-      { type: 2, value: "example.com" },
-      { type: 7, ip: "127.0.0.1" },
-      { type: 2, value: "api.example.com" },
-    ]);
+    expect(state).toBe("Illinois");
+    expect(sanExtension?.altNames).toHaveLength(3);
+    expect(sanExtension?.altNames?.[0]).toMatchObject({ type: 2, value: "example.com" });
+    expect(sanExtension?.altNames?.[1]).toMatchObject({ type: 7, ip: "127.0.0.1" });
+    expect(sanExtension?.altNames?.[2]).toMatchObject({ type: 2, value: "api.example.com" });
   });
 
   it("inspects parsed certificate details", () => {
