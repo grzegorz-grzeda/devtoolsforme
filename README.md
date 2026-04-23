@@ -63,7 +63,7 @@ End-to-end tests:
 npm run test:e2e
 ```
 
-Playwright uses a dedicated local server on `127.0.0.1:3100` through `npm run dev:test`.
+Playwright uses a dedicated local server on `http://localhost:3110` during `npm run test:e2e`.
 
 ## Validation
 

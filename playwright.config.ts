@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {
-    baseURL: "http://127.0.0.1:3100",
+    baseURL: "http://localhost:3110",
     trace: "on-first-retry",
   },
   projects: [
@@ -18,9 +18,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run build && npx serve@latest out -l 3100",
-    url: "http://127.0.0.1:3100",
-    reuseExistingServer: true,
+    command: "npm run build && npx serve@latest out -l 3110",
+    url: "http://localhost:3110",
+    reuseExistingServer: false,
     timeout: 120000,
   },
 });

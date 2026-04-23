@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizeThemePreference, resolveSystemTheme, resolveTheme } from "@/lib/theme";
+import { normalizeThemePreference, resolveSystemTheme, resolveTheme } from "../../lib/theme";
 
 describe("theme helpers", () => {
   it("defaults unknown preferences to system", () => {
