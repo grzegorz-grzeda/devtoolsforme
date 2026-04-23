@@ -5,3 +5,5 @@ npm-debug.log*
 tsconfig.tsbuildinfo
 .env*.local
 .codex
+playwright-report
+test-results
