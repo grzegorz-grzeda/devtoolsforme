@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ToolCard } from "@/components/tool-card";
+import { HomeToolBrowser } from "@/components/home-tool-browser";
 import { tools } from "@/lib/tools";
 
 export default function Home() {
@@ -17,33 +17,39 @@ export default function Home() {
               Pocket-sized developer tools, shaped for everyday flow.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-ink/75">
-              Start with fast utilities that run right in the browser: UUID generation, Base64 conversion,
-              arithmetic, and number-system conversion. Designed to stay lightweight and easy to grow.
+              Run common developer tasks directly in the browser: format data, inspect tokens, convert
+              values, compare text, and generate placeholders without losing momentum.
             </p>
           </div>
 
           <div className="rounded-[2rem] bg-ink p-6 text-white">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-white/60">Launch plan</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-white/60">Toolkit now includes</p>
             <ul className="mt-5 space-y-4 text-sm leading-7 text-white/85">
-              <li>Static-friendly Next.js setup for smooth Netlify deployment</li>
-              <li>Standalone tool pages that can scale into a larger library</li>
-              <li>Browser-only logic for speed, privacy, and lower hosting cost</li>
+              <li>{tools.length} browser-first tools with no backend dependency</li>
+              <li>Fast routes ready for GitHub and Netlify deployment</li>
+              <li>Reusable patterns so adding more utilities stays easy</li>
             </ul>
             <Link
-              href="/tools/uuid"
+              href="/tools/json-formatter"
               className="mt-6 inline-flex rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accentDark"
             >
-              Try the first tool
+              Open a popular tool
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="mt-10 grid gap-5 md:grid-cols-2">
-        {tools.map((tool, index) => (
-          <ToolCard key={tool.slug} tool={tool} index={index} />
-        ))}
+      <section className="mt-10 flex items-center justify-between gap-4">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-lake/80">Tool library</p>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-ink">Everything in one lightweight workspace</h2>
+        </div>
+        <p className="max-w-md text-sm leading-7 text-ink/65">
+          Pick a tool card and jump straight into the task. Everything here runs client-side for speed and privacy.
+        </p>
       </section>
+
+      <HomeToolBrowser tools={tools} />
     </main>
   );
 }
