@@ -18,9 +18,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev:test",
+    command: "npm run build && npx serve@latest out -l 3100",
     url: "http://127.0.0.1:3100",
-    reuseExistingServer: false,
+    reuseExistingServer: true,
     timeout: 120000,
   },
 });

@@ -138,13 +138,13 @@ test("memory viewer groups bytes with offsets and ASCII", async ({ page }) => {
 test("Modbus RTU helper appends CRC bytes", async ({ page }) => {
   await page.goto("/tools/modbus-rtu-helper");
 
-  const inputs = page.locator("input");
-  await inputs.nth(0).fill("01");
-  await inputs.nth(1).fill("03");
-  await inputs.nth(2).fill("00 10 00 02");
+  await page.getByLabel("Slave").fill("01");
+  await page.getByLabel("Function").selectOption("read-holding-registers");
+  await page.getByLabel("Start address").fill("0x0010");
+  await page.getByLabel("Quantity").fill("2");
 
-  await expect(page.getByText(/01 03 00 10 00 02/i)).toBeVisible();
-  await expect(page.getByText(/C5 CE/i)).toBeVisible();
+  await expect(page.locator("div").filter({ hasText: /^Payload preview00 10 00 02$/ }).getByText(/^00 10 00 02$/)).toBeVisible();
+  await expect(page.locator("div").filter({ hasText: /^Frame with CRC \(little-endian CRC bytes\)01 03 00 10 00 02 C5 CE$/ }).getByText(/^01 03 00 10 00 02 C5 CE$/)).toBeVisible();
 });
 
 test("fixed-point converter scales decimal into Q format", async ({ page }) => {
