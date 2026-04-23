@@ -209,6 +209,15 @@ test("Intel HEX inspector parses records and absolute address", async ({ page })
   await expect(page.getByText(/Extended linear 0x0800/i)).toBeVisible();
 });
 
+test("MQTT client renders browser connection controls", async ({ page }) => {
+  await page.goto("/tools/mqtt-client");
+
+  await expect(page.getByRole("heading", { name: "MQTT Client" })).toBeVisible();
+  await expect(page.getByLabel(/Broker URL/i)).toHaveValue("ws://127.0.0.1:9001");
+  await expect(page.getByRole("button", { name: /^Connect$/ })).toBeVisible();
+  await expect(page.getByText(/TLS note:/i)).toBeVisible();
+});
+
 test("S-record inspector parses records and validates checksums", async ({ page }) => {
   await page.goto("/tools/s-record-inspector");
 

@@ -42,6 +42,7 @@ export const tools: ToolDefinition[] = [
   { slug: "url-encoder", name: "URL Encoder", description: "Encode and decode URLs, query strings, and reserved characters for safer sharing.", badge: "Encoding", category: "Encoding" },
   { slug: "url-parser", name: "URL Parser", description: "Break down a URL into protocol, host, path, parameters, and fragment parts instantly.", badge: "Encoding", category: "Encoding" },
   { slug: "query-param-editor", name: "Query Param Editor", description: "Build and edit URLs with query parameters without hand-editing long strings.", badge: "Encoding", category: "Encoding" },
+  { slug: "mqtt-client", name: "MQTT Client", description: "Connect to MQTT brokers over WebSockets, subscribe to topics, publish messages, and inspect traffic in the browser.", badge: "Network", category: "Network" },
   { slug: "timestamp-converter", name: "Timestamp Converter", description: "Move between Unix timestamps and readable dates with UTC and local time views.", badge: "Time", category: "Data" },
   { slug: "cron-parser", name: "Cron Parser", description: "Read a cron expression field by field so schedules become easier to verify.", badge: "Time", category: "Data" },
   { slug: "hash-generator", name: "Hash Generator", description: "Generate SHA hashes in the browser for quick integrity checks and comparisons.", badge: "Identity", category: "Security" },
