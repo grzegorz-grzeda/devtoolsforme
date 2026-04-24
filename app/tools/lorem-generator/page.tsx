@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { LoremGeneratorTool } from "@/components/lorem-generator-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Lorem Generator", "Create placeholder words, sentences, or paragraphs for mocks, demos, and in-progress layouts.", "lorem-generator");export default function LoremGeneratorPage() { return <ToolShell slug="lorem-generator" eyebrow="Content" title="Lorem Generator" description="Create placeholder words, sentences, or paragraphs for mocks, demos, and in-progress layouts."><LoremGeneratorTool /></ToolShell>; }
+import { LoremGeneratorTool } from "@/components/lorem-generator-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "lorem-generator",
+  eyebrow: "Content",
+  title: "Lorem Generator",
+  description: "Create placeholder words, sentences, or paragraphs for mocks, demos, and in-progress layouts.",
+  component: LoremGeneratorTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

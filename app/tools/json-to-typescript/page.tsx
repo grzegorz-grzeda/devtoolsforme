@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { JSONToTypeScriptTool } from "@/components/json-to-typescript-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("JSON to TypeScript", "Turn sample JSON into a fast starter TypeScript type definition.", "json-to-typescript");export default function JSONToTypeScriptPage() { return <ToolShell slug="json-to-typescript" eyebrow="Data" title="JSON to TypeScript" description="Turn sample JSON into a fast starter TypeScript type definition."><JSONToTypeScriptTool /></ToolShell>; }
+import { JSONToTypeScriptTool } from "@/components/json-to-typescript-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "json-to-typescript",
+  eyebrow: "Data",
+  title: "JSON to TypeScript",
+  description: "Turn sample JSON into a fast starter TypeScript type definition.",
+  component: JSONToTypeScriptTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

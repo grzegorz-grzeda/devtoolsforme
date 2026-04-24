@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { EmbeddedUnitConverterTool } from "@/components/embedded-unit-converter-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Embedded Unit Converter", "Convert between Hz, kHz, MHz and ns, us, ms for common firmware calculations.", "embedded-unit-converter");export default function Page() { return <ToolShell slug="embedded-unit-converter" eyebrow="Embedded" title="Embedded Unit Converter" description="Convert between Hz, kHz, MHz and ns, us, ms for common firmware calculations."><EmbeddedUnitConverterTool /></ToolShell>; }
+import { EmbeddedUnitConverterTool } from "@/components/embedded-unit-converter-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "embedded-unit-converter",
+  eyebrow: "Embedded",
+  title: "Embedded Unit Converter",
+  description: "Convert between Hz, kHz, MHz and ns, us, ms for common firmware calculations.",
+  component: EmbeddedUnitConverterTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

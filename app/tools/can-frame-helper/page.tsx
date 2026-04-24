@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { CANFrameHelperTool } from "@/components/can-frame-helper-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("CAN Frame Helper", "Inspect simple CAN ID, frame type, DLC, and data byte layouts.", "can-frame-helper");export default function Page() { return <ToolShell slug="can-frame-helper" eyebrow="Embedded" title="CAN Frame Helper" description="Inspect simple CAN ID, frame type, DLC, and data byte layouts."><CANFrameHelperTool /></ToolShell>; }
+import { CANFrameHelperTool } from "@/components/can-frame-helper-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "can-frame-helper",
+  eyebrow: "Embedded",
+  title: "CAN Frame Helper",
+  description: "Inspect simple CAN ID, frame type, DLC, and data byte layouts.",
+  component: CANFrameHelperTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

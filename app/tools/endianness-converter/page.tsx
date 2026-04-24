@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { EndiannessConverterTool } from "@/components/endianness-converter-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Endianness Converter", "Flip byte order between big-endian and little-endian representations.", "endianness-converter");export default function Page() { return <ToolShell slug="endianness-converter" eyebrow="Embedded" title="Endianness Converter" description="Flip byte order between big-endian and little-endian representations."><EndiannessConverterTool /></ToolShell>; }
+import { EndiannessConverterTool } from "@/components/endianness-converter-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "endianness-converter",
+  eyebrow: "Embedded",
+  title: "Endianness Converter",
+  description: "Flip byte order between big-endian and little-endian representations.",
+  component: EndiannessConverterTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

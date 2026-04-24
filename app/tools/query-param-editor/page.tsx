@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { QueryParamEditorTool } from "@/components/query-param-editor-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Query Param Editor", "Build and edit URLs with query parameters without hand-editing long strings.", "query-param-editor");export default function QueryParamEditorPage() { return <ToolShell slug="query-param-editor" eyebrow="Encoding" title="Query Param Editor" description="Build and edit URLs with query parameters without hand-editing long strings."><QueryParamEditorTool /></ToolShell>; }
+import { QueryParamEditorTool } from "@/components/query-param-editor-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "query-param-editor",
+  eyebrow: "Encoding",
+  title: "Query Param Editor",
+  description: "Build and edit URLs with query parameters without hand-editing long strings.",
+  component: QueryParamEditorTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

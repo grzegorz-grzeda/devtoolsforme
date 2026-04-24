@@ -1,18 +1,13 @@
-import type { Metadata } from "next";
 import { TLSKeyGeneratorTool } from "@/components/tls-key-generator-tool";
-import { ToolShell } from "@/components/tool-shell";
-import { createToolMetadata } from "@/lib/metadata";
+import { createToolPage } from "@/lib/tool-page";
 
-export const metadata: Metadata = createToolMetadata(
-  "TLS Key Generator",
-  "Generate RSA keypairs and symmetric secrets directly in the browser, with PEM, hex, and base64 export where useful.",
-  "tls-key-generator"
-);
+const toolPage = createToolPage({
+  slug: "tls-key-generator",
+  eyebrow: "Security",
+  title: "TLS Key Generator",
+  description: "Generate RSA keypairs and symmetric secrets directly in the browser, with PEM, hex, and base64 export where useful.",
+  component: TLSKeyGeneratorTool,
+});
 
-export default function TLSKeyGeneratorPage() {
-  return (
-    <ToolShell slug="tls-key-generator" eyebrow="Security" title="TLS Key Generator" description="Generate RSA keypairs and symmetric secrets directly in the browser, with PEM, hex, and base64 export where useful.">
-      <TLSKeyGeneratorTool />
-    </ToolShell>
-  );
-}
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

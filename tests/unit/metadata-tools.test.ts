@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { createToolMetadata } from "../../lib/metadata";
@@ -88,6 +88,18 @@ describe("tools catalog", () => {
     for (const tool of tools) {
       const pagePath = path.join(process.cwd(), "app", "tools", tool.slug, "page.tsx");
       expect(existsSync(pagePath), `${tool.slug} should map to ${pagePath}`).toBe(true);
+    }
+  });
+
+  it("keeps tool route modules on the shared page helper", () => {
+    for (const tool of tools) {
+      const pagePath = path.join(process.cwd(), "app", "tools", tool.slug, "page.tsx");
+      const pageSource = readFileSync(pagePath, "utf8");
+
+      expect(pageSource).toContain('import { createToolPage } from "@/lib/tool-page";');
+      expect(pageSource).toContain("const toolPage = createToolPage({");
+      expect(pageSource).toContain("export const metadata = toolPage.metadata;");
+      expect(pageSource).toContain("export default toolPage.Page;");
     }
   });
 });

@@ -1,23 +1,13 @@
-import type { Metadata } from "next";
-import { ToolShell } from "@/components/tool-shell";
 import { UUIDTool } from "@/components/uuid-tool";
-import { createToolMetadata } from "@/lib/metadata";
+import { createToolPage } from "@/lib/tool-page";
 
-export const metadata: Metadata = createToolMetadata(
-  "UUID Generator",
-  "Generate UUID v1, v3, v4, v5, and v7 values, with timestamp or namespace inputs shown when a version needs them.",
-  "uuid"
-);
+const toolPage = createToolPage({
+  slug: "uuid",
+  eyebrow: "Identity",
+  title: "UUID Generator",
+  description: "Generate UUID v1, v3, v4, v5, and v7 values, with timestamp or namespace inputs shown when a version needs them.",
+  component: UUIDTool,
+});
 
-export default function UUIDPage() {
-  return (
-    <ToolShell
-      slug="uuid"
-      eyebrow="Identity"
-      title="UUID Generator"
-      description="Generate UUID v1, v3, v4, v5, and v7 values, with timestamp or namespace inputs shown when a version needs them."
-    >
-      <UUIDTool />
-    </ToolShell>
-  );
-}
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

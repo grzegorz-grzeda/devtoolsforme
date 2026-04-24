@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { RegexTesterTool } from "@/components/regex-tester-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Regex Tester", "Try patterns, adjust flags, and inspect match positions against real sample text while you refine expressions.", "regex-tester");export default function RegexTesterPage() { return <ToolShell slug="regex-tester" eyebrow="Text" title="Regex Tester" description="Try patterns, adjust flags, and inspect match positions against real sample text while you refine expressions."><RegexTesterTool /></ToolShell>; }
+import { RegexTesterTool } from "@/components/regex-tester-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "regex-tester",
+  eyebrow: "Text",
+  title: "Regex Tester",
+  description: "Try patterns, adjust flags, and inspect match positions against real sample text while you refine expressions.",
+  component: RegexTesterTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

@@ -1,23 +1,13 @@
-import type { Metadata } from "next";
 import { BitmaskCalculatorTool } from "@/components/bitmask-calculator-tool";
-import { ToolShell } from "@/components/tool-shell";
-import { createToolMetadata } from "@/lib/metadata";
+import { createToolPage } from "@/lib/tool-page";
 
-export const metadata: Metadata = createToolMetadata(
-  "Bitmask Calculator",
-  "Work with MCU registers and masks by setting, clearing, toggling, and inspecting bits across 8, 16, and 32-bit widths.",
-  "bitmask-calculator"
-);
+const toolPage = createToolPage({
+  slug: "bitmask-calculator",
+  eyebrow: "Embedded",
+  title: "Bitmask Calculator",
+  description: "Work with MCU registers and masks by setting, clearing, toggling, and inspecting bits across 8, 16, and 32-bit widths.",
+  component: BitmaskCalculatorTool,
+});
 
-export default function BitmaskCalculatorPage() {
-  return (
-    <ToolShell
-      slug="bitmask-calculator"
-      eyebrow="Embedded"
-      title="Bitmask Calculator"
-      description="Work with MCU registers and masks by setting, clearing, toggling, and inspecting bits across 8, 16, and 32-bit widths."
-    >
-      <BitmaskCalculatorTool />
-    </ToolShell>
-  );
-}
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

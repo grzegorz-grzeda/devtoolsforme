@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { ColorContrastTool } from "@/components/color-contrast-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Color Contrast Checker", "Check foreground and background combinations against common WCAG contrast thresholds.", "color-contrast");export default function ColorContrastPage() { return <ToolShell slug="color-contrast" eyebrow="Design" title="Color Contrast Checker" description="Check foreground and background combinations against common WCAG contrast thresholds."><ColorContrastTool /></ToolShell>; }
+import { ColorContrastTool } from "@/components/color-contrast-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "color-contrast",
+  eyebrow: "Design",
+  title: "Color Contrast Checker",
+  description: "Check foreground and background combinations against common WCAG contrast thresholds.",
+  component: ColorContrastTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { CalculatorTool } from "@/components/calculator-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Calculator", "Handle quick arithmetic without opening a heavier app, with editable expressions and one-tap result copying.", "calculator");export default function CalculatorPage() { return <ToolShell slug="calculator" eyebrow="Math" title="Calculator" description="Handle quick arithmetic without opening a heavier app, with editable expressions and one-tap result copying."><CalculatorTool /></ToolShell>; }
+import { CalculatorTool } from "@/components/calculator-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "calculator",
+  eyebrow: "Math",
+  title: "Calculator",
+  description: "Handle quick arithmetic without opening a heavier app, with editable expressions and one-tap result copying.",
+  component: CalculatorTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

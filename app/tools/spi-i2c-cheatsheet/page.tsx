@@ -1,1 +1,13 @@
-import type { Metadata } from "next"; import { SPII2CCheatsheetTool } from "@/components/spi-i2c-cheatsheet-tool"; import { ToolShell } from "@/components/tool-shell"; import { createToolMetadata } from "@/lib/metadata"; export const metadata: Metadata = createToolMetadata("SPI I2C Cheatsheet", "Reference SPI modes, convert I2C addresses, and estimate practical pull-up values.", "spi-i2c-cheatsheet"); export default function Page() { return <ToolShell slug="spi-i2c-cheatsheet" eyebrow="Embedded" title="SPI I2C Cheatsheet" description="Reference SPI modes, convert I2C addresses, and estimate practical pull-up values."><SPII2CCheatsheetTool /></ToolShell>; }
+import { SPII2CCheatsheetTool } from "@/components/spi-i2c-cheatsheet-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "spi-i2c-cheatsheet",
+  eyebrow: "Embedded",
+  title: "SPI I2C Cheatsheet",
+  description: "Reference SPI modes, convert I2C addresses, and estimate practical pull-up values.",
+  component: SPII2CCheatsheetTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

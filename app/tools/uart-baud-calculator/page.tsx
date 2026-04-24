@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { UARTBaudCalculatorTool } from "@/components/uart-baud-calculator-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("UART Baud Calculator", "Estimate baud register divisors, actual baud rates, and error percentages.", "uart-baud-calculator");export default function Page() { return <ToolShell slug="uart-baud-calculator" eyebrow="Embedded" title="UART Baud Calculator" description="Estimate baud register divisors, actual baud rates, and error percentages."><UARTBaudCalculatorTool /></ToolShell>; }
+import { UARTBaudCalculatorTool } from "@/components/uart-baud-calculator-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "uart-baud-calculator",
+  eyebrow: "Embedded",
+  title: "UART Baud Calculator",
+  description: "Estimate baud register divisors, actual baud rates, and error percentages.",
+  component: UARTBaudCalculatorTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

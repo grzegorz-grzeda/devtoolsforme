@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { CPreprocessorEvalTool } from "@/components/c-preprocessor-eval-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("C Preprocessor Expression Evaluator", "Evaluate macro-style numeric expressions with shifts, masks, and arithmetic.", "c-preprocessor-eval");export default function Page() { return <ToolShell slug="c-preprocessor-eval" eyebrow="Embedded" title="C Preprocessor Expression Evaluator" description="Evaluate macro-style numeric expressions with shifts, masks, and arithmetic."><CPreprocessorEvalTool /></ToolShell>; }
+import { CPreprocessorEvalTool } from "@/components/c-preprocessor-eval-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "c-preprocessor-eval",
+  eyebrow: "Embedded",
+  title: "C Preprocessor Expression Evaluator",
+  description: "Evaluate macro-style numeric expressions with shifts, masks, and arithmetic.",
+  component: CPreprocessorEvalTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

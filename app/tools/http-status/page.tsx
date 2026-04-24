@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { HTTPStatusTool } from "@/components/http-status-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("HTTP Status Lookup", "Search all standard HTTP response codes with practical examples and troubleshooting guidance.", "http-status");export default function HTTPStatusPage() { return <ToolShell slug="http-status" eyebrow="Reference" title="HTTP Status Lookup" description="Search all standard HTTP response codes with practical examples and troubleshooting guidance."><HTTPStatusTool /></ToolShell>; }
+import { HTTPStatusTool } from "@/components/http-status-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "http-status",
+  eyebrow: "Reference",
+  title: "HTTP Status Lookup",
+  description: "Search all standard HTTP response codes with practical examples and troubleshooting guidance.",
+  component: HTTPStatusTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

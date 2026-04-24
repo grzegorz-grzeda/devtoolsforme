@@ -1,23 +1,13 @@
-import type { Metadata } from "next";
 import { MQTTClientTool } from "@/components/mqtt-client-tool";
-import { ToolShell } from "@/components/tool-shell";
-import { createToolMetadata } from "@/lib/metadata";
+import { createToolPage } from "@/lib/tool-page";
 
-export const metadata: Metadata = createToolMetadata(
-  "MQTT Client",
-  "Connect to an MQTT broker over WebSockets, subscribe to topics, publish messages, and inspect traffic directly in the browser.",
-  "mqtt-client"
-);
+const toolPage = createToolPage({
+  slug: "mqtt-client",
+  eyebrow: "Network",
+  title: "MQTT Client",
+  description: "Connect to an MQTT broker over WebSockets, subscribe to topics, publish messages, and inspect traffic directly in the browser.",
+  component: MQTTClientTool,
+});
 
-export default function MQTTClientPage() {
-  return (
-    <ToolShell
-      slug="mqtt-client"
-      eyebrow="Network"
-      title="MQTT Client"
-      description="Connect to an MQTT broker over WebSockets, subscribe to topics, publish messages, and inspect traffic directly in the browser."
-    >
-      <MQTTClientTool />
-    </ToolShell>
-  );
-}
+export const metadata = toolPage.metadata;
+export default toolPage.Page;
