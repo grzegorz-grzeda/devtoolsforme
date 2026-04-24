@@ -53,6 +53,27 @@ test("JSON formatter pretty-prints JSON", async ({ page }) => {
   await expect(page.locator("pre").first()).toContainText('"tools": [');
 });
 
+test("Lorem generator counts words, sentences, and paragraphs exactly", async ({ page }) => {
+  await page.goto("/tools/lorem-generator");
+
+  const amount = page.getByLabel("Amount");
+  const output = page.locator("pre").first();
+
+  await amount.fill("5");
+
+  await page.getByRole("button", { name: /^words$/i }).click();
+  expect(((await output.textContent()) ?? "").trim().split(/\s+/)).toHaveLength(5);
+
+  await page.getByRole("button", { name: /^sentences$/i }).click();
+  expect((((await output.textContent()) ?? "").match(/\./g) ?? [])).toHaveLength(5);
+
+  await page.getByRole("button", { name: /^paragraphs$/i }).click();
+  expect(((await output.textContent()) ?? "").trim().split(/\n\s*\n/)).toHaveLength(5);
+
+  await amount.fill("2000");
+  await expect(amount).toHaveValue("1000");
+});
+
 test("HTTP status lookup supports standard codes and scenario searches", async ({ page }) => {
   await page.goto("/tools/http-status");
 

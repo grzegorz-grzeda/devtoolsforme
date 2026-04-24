@@ -2,28 +2,13 @@
 
 import { useMemo, useState } from "react";
 import { CopyButton } from "@/components/copy-button";
-
-const sourceWords = [
-  "devtoolsforme", "browser", "workflow", "deploy", "utility", "signal", "format", "inspect",
-  "token", "layout", "compose", "iterate", "build", "preview", "release", "clarity", "focus",
-  "streamline", "syntax", "helper", "snippet", "design", "console", "pipeline", "typing",
-];
-
-function generateWords(count: number) {
-  return Array.from({ length: count }, (_, index) => sourceWords[index % sourceWords.length]).join(" ");
-}
-
-function generateSentences(count: number) {
-  return Array.from({ length: count }, (_, index) => {
-    const start = (index * 7) % sourceWords.length;
-    const words = Array.from({ length: 10 }, (_, offset) => sourceWords[(start + offset) % sourceWords.length]);
-    return `${words[0].charAt(0).toUpperCase()}${words[0].slice(1)} ${words.slice(1).join(" ")}.`;
-  }).join(" ");
-}
-
-function generateParagraphs(count: number) {
-  return Array.from({ length: count }, (_, index) => generateSentences(3 + (index % 2))).join("\n\n");
-}
+import {
+  MAX_LOREM_COUNT,
+  clampLoremCount,
+  generateParagraphs,
+  generateSentences,
+  generateWords,
+} from "@/lib/lorem-generator";
 
 export function LoremGeneratorTool() {
   const [mode, setMode] = useState<"words" | "sentences" | "paragraphs">("paragraphs");
@@ -31,11 +16,11 @@ export function LoremGeneratorTool() {
 
   const output = useMemo(() => {
     if (mode === "words") {
-      return generateWords(count * 12);
+      return generateWords(count);
     }
 
     if (mode === "sentences") {
-      return generateSentences(count * 3);
+      return generateSentences(count);
     }
 
     return generateParagraphs(count);
@@ -61,14 +46,16 @@ export function LoremGeneratorTool() {
       <label className="flex flex-col gap-2 text-sm font-semibold text-ink/80">
         Amount
         <input
-          type="range"
+          type="number"
           min={1}
-          max={10}
+          max={MAX_LOREM_COUNT}
+          step={1}
+          inputMode="numeric"
           value={count}
-          onChange={(event) => setCount(Number(event.target.value))}
-          className="accent-accent"
+          onChange={(event) => setCount(clampLoremCount(Number.parseInt(event.target.value, 10)))}
+          className="rounded-2xl border border-ink/10 bg-white px-4 py-3 text-base text-lake outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20"
         />
-        <span className="font-mono text-lg text-lake">{count}</span>
+        <span className="font-mono text-sm text-ink/60">1–{MAX_LOREM_COUNT}</span>
       </label>
 
       <div className="rounded-[1.4rem] border border-ink/10 bg-white/70 p-4">
