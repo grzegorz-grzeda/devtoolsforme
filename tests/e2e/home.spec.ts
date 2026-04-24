@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("homepage loads and links to tool pages", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { name: /Quick browser tools for developer workflows/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Free developer tools\. Built by an embedded engineer\./i })).toBeVisible();
   await expect(page.getByRole("searchbox", { name: /Search tools/i })).toBeVisible();
   await expect(page.getByRole("banner").getByRole("link", { name: "My tools" })).toBeVisible();
   await expect(page.getByRole("contentinfo").getByRole("link", { name: "My tools" })).toBeVisible();

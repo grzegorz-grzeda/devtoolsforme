@@ -3,7 +3,7 @@ import Link from "next/link";
 import { createToolMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = createToolMetadata(
-    "Contact Sent",
+    "Thanks · Message Sent",
     "Confirmation page for contact requests sent through devtoolsforme."
 );
 
