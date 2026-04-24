@@ -4,8 +4,8 @@ test("homepage loads and links to tool pages", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: /Quick browser tools for developer workflows/i })).toBeVisible();
-  await expect(page.getByRole("heading", { name: /Advanced firmware helpers, without the clutter/i })).toBeVisible();
-  await expect(page.getByText(/^Registers$/)).toBeVisible();
+  await expect(page.getByRole("searchbox", { name: /Search tools/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Browse embedded/i })).toBeVisible();
   await expect(page.getByRole("link", { name: /Embedded tools/i })).toBeVisible();
 
   await page.getByRole("link", { name: /UUID Generator/i }).first().click();
