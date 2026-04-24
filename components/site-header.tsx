@@ -7,7 +7,7 @@ const navItems = [
   { href: "/tools/json-formatter", label: "Data" },
   { href: "/tools/regex-tester", label: "Text" },
   { href: "/about", label: "About" },
-  { href: "mailto:hello@devtoolsforme.com?subject=devtoolsforme%20feedback", label: "Feedback" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function SiteHeader() {

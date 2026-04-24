@@ -31,6 +31,14 @@ A few notable tools:
 
 ## Local development
 
+Environment variables:
+
+- `NEXT_PUBLIC_GA_ID` for consent-gated Google Analytics
+- `NEXT_PUBLIC_HEROTOFU_FORM_ACTION` or `HEROTOFU_FORM_ACTION` for the homepage contact form POST target
+
+The same HeroTofu-backed form is used on the homepage contact section and the dedicated `/contact` page.
+If you want a custom post-submit landing page in HeroTofu, point the success redirect to `/contact/thanks`.
+
 Install dependencies:
 
 ```bash

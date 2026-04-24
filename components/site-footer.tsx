@@ -6,7 +6,7 @@ const footerLinks = [
   { href: "/about", label: "About" },
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },
-  { href: "mailto:hello@devtoolsforme.com?subject=devtoolsforme%20feedback", label: "Feedback" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function SiteFooter() {
