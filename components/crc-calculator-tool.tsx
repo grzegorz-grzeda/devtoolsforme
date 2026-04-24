@@ -44,7 +44,7 @@ const CRC_TYPES: CrcConfig[] = [
   { label: "CRC-8",             width: 8,  poly: 0x07,       init: 0x00,       refIn: false, refOut: false, xorOut: 0x00       },
   { label: "CRC-8/MAXIM",       width: 8,  poly: 0x31,       init: 0x00,       refIn: true,  refOut: true,  xorOut: 0x00       },
   { label: "CRC-16/MODBUS",     width: 16, poly: 0x8005,     init: 0xffff,     refIn: true,  refOut: true,  xorOut: 0x0000     },
-  { label: "CRC-16/CCITT-FALSE",width: 16, poly: 0x1021,     init: 0xffff,     refIn: false, refOut: false, xorOut: 0x0000     },
+  { label: "CRC-16/CCITT-FALSE", width: 16, poly: 0x1021,     init: 0xffff,     refIn: false, refOut: false, xorOut: 0x0000     },
   { label: "CRC-16/KERMIT",     width: 16, poly: 0x1021,     init: 0x0000,     refIn: true,  refOut: true,  xorOut: 0x0000     },
   { label: "CRC-16/USB",        width: 16, poly: 0x8005,     init: 0xffff,     refIn: true,  refOut: true,  xorOut: 0xffff     },
   { label: "CRC-32",            width: 32, poly: 0x04c11db7, init: 0xffffffff, refIn: true,  refOut: true,  xorOut: 0xffffffff },
