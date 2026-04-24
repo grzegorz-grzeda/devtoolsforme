@@ -112,7 +112,7 @@ test("CRC calculator produces a checksum", async ({ page }) => {
   await page.keyboard.press("Control+A");
   await input.fill("ABC");
 
-  await expect(page.getByText(/CRC-32/i)).toBeVisible();
+  await expect(page.getByText("CRC-32", { exact: true })).toBeVisible();
   await expect(page.getByText(/0xA3830348/i)).toBeVisible();
 });
 
