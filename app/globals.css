@@ -208,6 +208,10 @@ a:focus-visible {
   background-color: rgb(var(--color-panel) / 0.42);
 }
 
+:root[data-theme="dark"] .bg-white {
+  background-color: rgb(var(--color-panel));
+}
+
 :root[data-theme="dark"] .border-white\/60,
 :root[data-theme="dark"] .border-white\/70 {
   border-color: rgb(var(--color-overlay-border) / 0.95);
