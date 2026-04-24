@@ -9,7 +9,7 @@ export type ToolDefinition = {
 export const tools: ToolDefinition[] = [
   { slug: "uuid", name: "UUID Generator", description: "Create v4 UUIDs instantly and copy a fresh batch for IDs, tests, and fixtures.", badge: "Identity", category: "Identity" },
   { slug: "bitmask-calculator", name: "Bitmask Calculator", description: "Set, clear, toggle, and inspect register bits across 8, 16, and 32-bit values.", badge: "Embedded", category: "Embedded" },
-  { slug: "integer-ranges", name: "Integer Type Ranges", description: "Reference min and max values for common fixed-width signed and unsigned C integer types.", badge: "Embedded", category: "Embedded" },
+  { slug: "integer-ranges", name: "Integer Type Ranges", description: "Reference exact-width integer ranges plus stdint.h limit macros and stddef.h size and pointer-difference types.", badge: "Embedded", category: "Embedded" },
   { slug: "endianness-converter", name: "Endianness Converter", description: "Flip byte order between big-endian and little-endian representations.", badge: "Embedded", category: "Embedded" },
   { slug: "crc-calculator", name: "CRC Calculator", description: "Calculate CRC-8, CRC-16 Modbus, and CRC-32 checksums for embedded payloads.", badge: "Embedded", category: "Embedded" },
   { slug: "struct-padding", name: "Struct Padding Visualizer", description: "Estimate offsets, alignment, and padding for common fixed-width fields in C structs.", badge: "Embedded", category: "Embedded" },

@@ -126,6 +126,16 @@ test("endianness converter flips byte order", async ({ page }) => {
   await expect(page.getByText(/CD AB 34 12/i)).toBeVisible();
 });
 
+test("integer ranges tool covers stdint.h and stddef.h references", async ({ page }) => {
+  await page.goto("/tools/integer-ranges");
+
+  await expect(page.getByText(/Exact-width ranges/i)).toBeVisible();
+  await expect(page.getByText(/INT32_MIN \/ INT32_MAX/i)).toBeVisible();
+  await expect(page.getByText(/int_leastN_t \/ uint_leastN_t/i)).toBeVisible();
+  await expect(page.getByText(/typedef in stddef\.h, SIZE_MAX in stdint\.h/i)).toBeVisible();
+  await expect(page.getByText(/PTRDIFF_MIN \/ PTRDIFF_MAX/i)).toBeVisible();
+});
+
 test("UART baud calculator shows divisor and error", async ({ page }) => {
   await page.goto("/tools/uart-baud-calculator");
 
