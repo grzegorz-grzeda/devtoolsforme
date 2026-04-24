@@ -11,27 +11,49 @@ const buttons = [
   "C", "%", "+", "=",
 ];
 
+const ERROR_INVALID = "Invalid calculation";
+const ERROR_UNSUPPORTED = "Unsupported characters";
+
 function evaluateExpression(expression: string) {
   if (!expression.trim()) {
     return "";
   }
 
   if (!/^[0-9+\-*/%().\s]+$/.test(expression)) {
-    return "Unsupported characters";
+    return ERROR_UNSUPPORTED;
   }
 
   try {
     const result = Function(`"use strict"; return (${expression})`)();
-    return Number.isFinite(result) ? String(result) : "Invalid calculation";
+    return Number.isFinite(result) ? String(result) : ERROR_INVALID;
   } catch {
-    return "Invalid calculation";
+    return ERROR_INVALID;
   }
+}
+
+function getAlternativeBases(result: string): { hex: string; oct: string; bin: string } | null {
+  const num = Number(result);
+  if (!Number.isFinite(num)) return null;
+  if (!Number.isInteger(num)) {
+    return { hex: "N/A (float)", oct: "N/A (float)", bin: "N/A (float)" };
+  }
+  if (!Number.isSafeInteger(num)) {
+    return { hex: "N/A (too large)", oct: "N/A (too large)", bin: "N/A (too large)" };
+  }
+  const abs = Math.abs(num);
+  const sign = num < 0 ? "-" : "";
+  return {
+    hex: `${sign}0x${abs.toString(16).toUpperCase()}`,
+    oct: `${sign}0o${abs.toString(8)}`,
+    bin: `${sign}0b${abs.toString(2)}`,
+  };
 }
 
 export function CalculatorTool() {
   const [expression, setExpression] = useState("(12 + 8) / 5");
   const [history, setHistory] = useState<string[]>([]);
   const result = useMemo(() => evaluateExpression(expression), [expression]);
+  const altBases = useMemo(() => (result && result !== ERROR_INVALID && result !== ERROR_UNSUPPORTED ? getAlternativeBases(result) : null), [result]);
 
   function append(value: string) {
     if (value === "C") {
@@ -40,7 +62,7 @@ export function CalculatorTool() {
     }
 
     if (value === "=") {
-      if (result && result !== "Invalid calculation" && result !== "Unsupported characters") {
+      if (result && result !== ERROR_INVALID && result !== ERROR_UNSUPPORTED) {
         setHistory((current) => [`${expression} = ${result}`, ...current].slice(0, 6));
         setExpression(result);
       }
@@ -80,6 +102,13 @@ export function CalculatorTool() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/60">Result</p>
             <p className="text-2xl font-bold">{result || "0"}</p>
+            {altBases && (
+              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-white/70">
+                <span><span className="text-white/40">HEX</span> {altBases.hex}</span>
+                <span><span className="text-white/40">OCT</span> {altBases.oct}</span>
+                <span><span className="text-white/40">BIN</span> {altBases.bin}</span>
+              </div>
+            )}
           </div>
           <CopyButton value={result} label="Copy result" />
         </div>
