@@ -235,6 +235,18 @@ test("MQTT client renders browser connection controls", async ({ page }) => {
   await expect(page.getByText(/TLS note:/i)).toBeVisible();
 });
 
+test("tool hero stays compact on desktop layouts", async ({ page }) => {
+  await page.goto("/tools/mqtt-client");
+
+  const hero = page.getByTestId("tool-hero");
+  await expect(hero).toBeVisible();
+  await expect(page.getByText(/inspect traffic directly in the browser/i)).toBeVisible();
+
+  const box = await hero.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.height).toBeLessThan(180);
+});
+
 test("TLS key generator renders key generation controls", async ({ page }) => {
   await page.goto("/tools/tls-key-generator");
 
