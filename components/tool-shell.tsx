@@ -29,9 +29,9 @@ export function ToolShell({
       </div>
 
       <section className="space-y-3">
-        <div className="space-y-3 rounded-[1.6rem] border border-white/60 bg-card p-4 shadow-soft backdrop-blur md:p-5">
+        <div data-testid="tool-hero" className="space-y-3 rounded-[1.6rem] border border-white/60 bg-card p-4 shadow-soft backdrop-blur md:p-5">
           <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-lake/80">devtoolsforme</p>
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div className="space-y-2">
               <h1 className="max-w-3xl text-2xl font-bold tracking-tight text-ink md:text-3xl">{title}</h1>
               <p className="max-w-3xl text-sm leading-6 text-ink/75">{description}</p>

@@ -238,7 +238,7 @@ test("MQTT client renders browser connection controls", async ({ page }) => {
 test("tool hero stays compact on desktop layouts", async ({ page }) => {
   await page.goto("/tools/mqtt-client");
 
-  const hero = page.locator("main section > div").first();
+  const hero = page.getByTestId("tool-hero");
   await expect(hero).toBeVisible();
   await expect(page.getByText(/inspect traffic directly in the browser/i)).toBeVisible();
 
