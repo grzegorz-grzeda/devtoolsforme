@@ -260,7 +260,7 @@ test("two's complement converter shows signed and unsigned views", async ({ page
   await expect(page.getByText(/0xFF/i)).toBeVisible();
 });
 
-test("consent banner persists acceptance and recently opened tools appear on homepage", async ({ page, context }) => {
+test("consent banner persists acceptance and recently opened tools appear on the my tools page", async ({ page, context }) => {
   await page.goto("/");
 
   const bannerButton = page.getByRole("button", { name: /Accept analytics/i });
@@ -271,8 +271,8 @@ test("consent banner persists acceptance and recently opened tools appear on hom
   await page.goto("/tools/json-formatter");
   await expect(page.getByRole("heading", { name: "JSON Formatter" })).toBeVisible();
 
-  await page.goto("/");
-  await expect(page.getByText(/Recent/i)).toBeVisible();
+  await page.goto("/my-tools");
+  await expect(page.getByText("Recent", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: /JSON Formatter/i }).first()).toBeVisible();
 
   const consent = await page.evaluate(() => window.localStorage.getItem("dtfm-consent-analytics"));
