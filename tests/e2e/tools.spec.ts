@@ -53,6 +53,23 @@ test("JSON formatter pretty-prints JSON", async ({ page }) => {
   await expect(page.locator("pre").first()).toContainText('"tools": [');
 });
 
+test("HTTP status lookup supports standard codes and scenario searches", async ({ page }) => {
+  await page.goto("/tools/http-status");
+
+  const input = page.getByPlaceholder("Try 404, websocket, retry-after, upload");
+
+  await expect(page.getByRole("heading", { name: /404 Not Found/i })).toBeVisible();
+  await expect(page.getByText(/Example use cases/i)).toBeVisible();
+  await expect(page.getByText(/Troubleshooting \/ follow-up/i)).toBeVisible();
+
+  await input.fill("websocket");
+  await expect(page.getByRole("heading", { name: /101 Switching Protocols/i })).toBeVisible();
+  await expect(page.getByText(/Showing 1 standard status code/i)).toBeVisible();
+
+  await input.fill("captive portal");
+  await expect(page.getByRole("heading", { name: /511 Network Authentication Required/i })).toBeVisible();
+});
+
 test("bitmask calculator computes register operations", async ({ page }) => {
   await page.goto("/tools/bitmask-calculator");
 
