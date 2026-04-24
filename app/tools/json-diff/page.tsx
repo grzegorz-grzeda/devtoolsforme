@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { JSONDiffTool } from "@/components/json-diff-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("JSON Diff", "Compare two JSON documents side by side and quickly spot structural or value changes.", "json-diff");export default function JSONDiffPage() { return <ToolShell slug="json-diff" eyebrow="Data" title="JSON Diff" description="Compare two JSON documents side by side and quickly spot structural or value changes."><JSONDiffTool /></ToolShell>; }
+import { JSONDiffTool } from "@/components/json-diff-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "json-diff",
+  eyebrow: "Data",
+  title: "JSON Diff",
+  description: "Compare two JSON documents side by side and quickly spot structural or value changes.",
+  component: JSONDiffTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

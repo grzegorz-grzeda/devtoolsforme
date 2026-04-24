@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { StructPaddingTool } from "@/components/struct-padding-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Struct Padding Visualizer", "Estimate offsets, alignment, and padding for common fixed-width fields in C structs.", "struct-padding");export default function Page() { return <ToolShell slug="struct-padding" eyebrow="Embedded" title="Struct Padding Visualizer" description="Estimate offsets, alignment, and padding for common fixed-width fields in C structs."><StructPaddingTool /></ToolShell>; }
+import { StructPaddingTool } from "@/components/struct-padding-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "struct-padding",
+  eyebrow: "Embedded",
+  title: "Struct Padding Visualizer",
+  description: "Estimate offsets, alignment, and padding for common fixed-width fields in C structs.",
+  component: StructPaddingTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

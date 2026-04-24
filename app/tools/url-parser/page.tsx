@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { ToolShell } from "@/components/tool-shell";import { URLParserTool } from "@/components/url-parser-tool";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("URL Parser", "Break down a URL into protocol, host, path, parameters, and fragment parts instantly.", "url-parser");export default function URLParserPage() { return <ToolShell slug="url-parser" eyebrow="Encoding" title="URL Parser" description="Break down a URL into protocol, host, path, parameters, and fragment parts instantly."><URLParserTool /></ToolShell>; }
+import { URLParserTool } from "@/components/url-parser-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "url-parser",
+  eyebrow: "Encoding",
+  title: "URL Parser",
+  description: "Break down a URL into protocol, host, path, parameters, and fragment parts instantly.",
+  component: URLParserTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

@@ -97,3 +97,17 @@ Netlify should publish the generated `out` directory.
 - Google Analytics is consent-gated
 - Homepage and tool pages are intentionally compacted for quick developer access
 - Embedded tooling is a major product area, not a secondary add-on
+
+## Architecture review snapshot
+
+- `app/` owns route composition and page-level metadata
+- `components/` owns reusable UI and tool implementations
+- `lib/` owns shared metadata helpers, catalogs, and pure utility logic
+- Tool routes should stay thin and delegate to shared helpers instead of duplicating page shell wiring
+
+## Iterative refactor plan
+
+- Keep route modules lightweight and consistent by centralizing repeated tool-page boilerplate
+- Continue moving pure parsing/calculation logic into `lib/` so it can be unit-tested without UI coupling
+- Expand focused unit and smoke coverage whenever a shared helper or cross-tool behavior changes
+- Prefer small, validated refactors so each step can ship with `npm run lint`, `npm run test:unit`, `npm run build`, and `npm run test:e2e`

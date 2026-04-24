@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { MIMELookupTool } from "@/components/mime-lookup-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("MIME Lookup", "Look up common file extensions and MIME types for headers, uploads, and assets.", "mime-lookup");export default function MIMELookupPage() { return <ToolShell slug="mime-lookup" eyebrow="Reference" title="MIME Lookup" description="Look up common file extensions and MIME types for headers, uploads, and assets."><MIMELookupTool /></ToolShell>; }
+import { MIMELookupTool } from "@/components/mime-lookup-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "mime-lookup",
+  eyebrow: "Reference",
+  title: "MIME Lookup",
+  description: "Look up common file extensions and MIME types for headers, uploads, and assets.",
+  component: MIMELookupTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

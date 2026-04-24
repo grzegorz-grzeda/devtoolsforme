@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { CronParserTool } from "@/components/cron-parser-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Cron Parser", "Read a cron expression field by field so schedules become easier to verify.", "cron-parser");export default function CronParserPage() { return <ToolShell slug="cron-parser" eyebrow="Time" title="Cron Parser" description="Read a cron expression field by field so schedules become easier to verify."><CronParserTool /></ToolShell>; }
+import { CronParserTool } from "@/components/cron-parser-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "cron-parser",
+  eyebrow: "Time",
+  title: "Cron Parser",
+  description: "Read a cron expression field by field so schedules become easier to verify.",
+  component: CronParserTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

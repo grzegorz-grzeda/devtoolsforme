@@ -1,1 +1,13 @@
-import type { Metadata } from "next"; import { CArrayGeneratorTool } from "@/components/c-array-generator-tool"; import { ToolShell } from "@/components/tool-shell"; import { createToolMetadata } from "@/lib/metadata"; export const metadata: Metadata = createToolMetadata("C Array Generator", "Generate C byte arrays from text or turn uploaded images into SSD1309-ready monochrome bitmaps.", "c-array-generator"); export default function Page() { return <ToolShell slug="c-array-generator" eyebrow="Embedded" title="C Array Generator" description="Generate C byte arrays from text or turn uploaded images into SSD1309-ready monochrome bitmaps."><CArrayGeneratorTool /></ToolShell>; }
+import { CArrayGeneratorTool } from "@/components/c-array-generator-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "c-array-generator",
+  eyebrow: "Embedded",
+  title: "C Array Generator",
+  description: "Generate C byte arrays from text or turn uploaded images into SSD1309-ready monochrome bitmaps.",
+  component: CArrayGeneratorTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

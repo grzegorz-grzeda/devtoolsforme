@@ -1,23 +1,13 @@
-import type { Metadata } from "next";
 import { DmaThroughputCalculatorTool } from "@/components/dma-throughput-calculator-tool";
-import { ToolShell } from "@/components/tool-shell";
-import { createToolMetadata } from "@/lib/metadata";
+import { createToolPage } from "@/lib/tool-page";
 
-export const metadata: Metadata = createToolMetadata(
-  "DMA Throughput Calculator",
-  "Estimate burst count, cycle cost, transfer time, and throughput for DMA-style memory moves.",
-  "dma-throughput-calculator"
-);
+const toolPage = createToolPage({
+  slug: "dma-throughput-calculator",
+  eyebrow: "Embedded",
+  title: "DMA Throughput Calculator",
+  description: "Estimate burst count, cycle cost, transfer time, and throughput for DMA-style memory moves.",
+  component: DmaThroughputCalculatorTool,
+});
 
-export default function DmaThroughputCalculatorPage() {
-  return (
-    <ToolShell
-      slug="dma-throughput-calculator"
-      eyebrow="Embedded"
-      title="DMA Throughput Calculator"
-      description="Estimate burst count, cycle cost, transfer time, and throughput for DMA-style memory moves."
-    >
-      <DmaThroughputCalculatorTool />
-    </ToolShell>
-  );
-}
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

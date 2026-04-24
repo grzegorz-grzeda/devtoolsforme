@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { ASCIIHexByteTool } from "@/components/ascii-hex-byte-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("ASCII Hex Byte Converter", "Convert strings into byte values, hex bytes, and C-friendly representations.", "ascii-hex-byte");export default function Page() { return <ToolShell slug="ascii-hex-byte" eyebrow="Embedded" title="ASCII Hex Byte Converter" description="Convert strings into byte values, hex bytes, and C-friendly representations."><ASCIIHexByteTool /></ToolShell>; }
+import { ASCIIHexByteTool } from "@/components/ascii-hex-byte-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "ascii-hex-byte",
+  eyebrow: "Embedded",
+  title: "ASCII Hex Byte Converter",
+  description: "Convert strings into byte values, hex bytes, and C-friendly representations.",
+  component: ASCIIHexByteTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

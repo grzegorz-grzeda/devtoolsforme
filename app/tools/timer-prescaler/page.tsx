@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { TimerPrescalerTool } from "@/components/timer-prescaler-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Timer Prescaler Calculator", "Estimate timer tick periods, interrupt intervals, and resulting frequencies.", "timer-prescaler");export default function Page() { return <ToolShell slug="timer-prescaler" eyebrow="Embedded" title="Timer Prescaler Calculator" description="Estimate timer tick periods, interrupt intervals, and resulting frequencies."><TimerPrescalerTool /></ToolShell>; }
+import { TimerPrescalerTool } from "@/components/timer-prescaler-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "timer-prescaler",
+  eyebrow: "Embedded",
+  title: "Timer Prescaler Calculator",
+  description: "Estimate timer tick periods, interrupt intervals, and resulting frequencies.",
+  component: TimerPrescalerTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

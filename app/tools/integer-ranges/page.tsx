@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { IntegerRangesTool } from "@/components/integer-ranges-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Integer Type Ranges", "Reference exact-width integer ranges plus stdint.h limit macros and stddef.h size and pointer-difference types.", "integer-ranges");export default function Page() { return <ToolShell slug="integer-ranges" eyebrow="Embedded" title="Integer Type Ranges" description="Reference exact-width integer ranges plus stdint.h limit macros and stddef.h size and pointer-difference types."><IntegerRangesTool /></ToolShell>; }
+import { IntegerRangesTool } from "@/components/integer-ranges-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "integer-ranges",
+  eyebrow: "Embedded",
+  title: "Integer Type Ranges",
+  description: "Reference exact-width integer ranges plus stdint.h limit macros and stddef.h size and pointer-difference types.",
+  component: IntegerRangesTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

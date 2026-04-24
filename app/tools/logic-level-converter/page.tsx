@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { LogicLevelConverterTool } from "@/components/logic-level-converter-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Logic Level ADC DAC Converter", "Translate voltages into ADC counts and back using your selected reference.", "logic-level-converter");export default function Page() { return <ToolShell slug="logic-level-converter" eyebrow="Embedded" title="Logic Level ADC DAC Converter" description="Translate voltages into ADC counts and back using your selected reference."><LogicLevelConverterTool /></ToolShell>; }
+import { LogicLevelConverterTool } from "@/components/logic-level-converter-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "logic-level-converter",
+  eyebrow: "Embedded",
+  title: "Logic Level ADC DAC Converter",
+  description: "Translate voltages into ADC counts and back using your selected reference.",
+  component: LogicLevelConverterTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

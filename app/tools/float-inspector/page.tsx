@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { FloatInspectorTool } from "@/components/float-inspector-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("IEEE-754 Float Inspector", "Inspect a float as hex plus its sign, exponent, and mantissa fields.", "float-inspector");export default function Page() { return <ToolShell slug="float-inspector" eyebrow="Embedded" title="IEEE-754 Float Inspector" description="Inspect a float as hex plus its sign, exponent, and mantissa fields."><FloatInspectorTool /></ToolShell>; }
+import { FloatInspectorTool } from "@/components/float-inspector-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "float-inspector",
+  eyebrow: "Embedded",
+  title: "IEEE-754 Float Inspector",
+  description: "Inspect a float as hex plus its sign, exponent, and mantissa fields.",
+  component: FloatInspectorTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

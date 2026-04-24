@@ -1,23 +1,13 @@
-import type { Metadata } from "next";
 import { PllCalculatorTool } from "@/components/pll-calculator-tool";
-import { ToolShell } from "@/components/tool-shell";
-import { createToolMetadata } from "@/lib/metadata";
+import { createToolPage } from "@/lib/tool-page";
 
-export const metadata: Metadata = createToolMetadata(
-  "PLL Calculator",
-  "Estimate VCO input, VCO output, final PLL frequency, and output period while exploring divider chains.",
-  "pll-calculator"
-);
+const toolPage = createToolPage({
+  slug: "pll-calculator",
+  eyebrow: "Embedded",
+  title: "PLL Calculator",
+  description: "Estimate VCO input, VCO output, final PLL frequency, and output period while exploring divider chains.",
+  component: PllCalculatorTool,
+});
 
-export default function PllCalculatorPage() {
-  return (
-    <ToolShell
-      slug="pll-calculator"
-      eyebrow="Embedded"
-      title="PLL Calculator"
-      description="Estimate VCO input, VCO output, final PLL frequency, and output period while exploring divider chains."
-    >
-      <PllCalculatorTool />
-    </ToolShell>
-  );
-}
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

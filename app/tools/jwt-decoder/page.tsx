@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { JWTDecoderTool } from "@/components/jwt-decoder-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("JWT Decoder", "Inspect token headers and payload claims locally, with readable time fields and no network roundtrip.", "jwt-decoder");export default function JWTDecoderPage() { return <ToolShell slug="jwt-decoder" eyebrow="Security" title="JWT Decoder" description="Inspect token headers and payload claims locally, with readable time fields and no network roundtrip."><JWTDecoderTool /></ToolShell>; }
+import { JWTDecoderTool } from "@/components/jwt-decoder-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "jwt-decoder",
+  eyebrow: "Security",
+  title: "JWT Decoder",
+  description: "Inspect token headers and payload claims locally, with readable time fields and no network roundtrip.",
+  component: JWTDecoderTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

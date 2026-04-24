@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { TextDiffTool } from "@/components/text-diff-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("Text Diff", "Compare two text blocks line by line so changed configuration, snippets, and notes stand out immediately.", "text-diff");export default function TextDiffPage() { return <ToolShell slug="text-diff" eyebrow="Text" title="Text Diff" description="Compare two text blocks line by line so changed configuration, snippets, and notes stand out immediately."><TextDiffTool /></ToolShell>; }
+import { TextDiffTool } from "@/components/text-diff-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "text-diff",
+  eyebrow: "Text",
+  title: "Text Diff",
+  description: "Compare two text blocks line by line so changed configuration, snippets, and notes stand out immediately.",
+  component: TextDiffTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;

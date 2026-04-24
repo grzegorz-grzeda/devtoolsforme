@@ -1,1 +1,13 @@
-import type { Metadata } from "next";import { CEscapeGeneratorTool } from "@/components/c-escape-generator-tool";import { ToolShell } from "@/components/tool-shell";import { createToolMetadata } from "@/lib/metadata";export const metadata: Metadata = createToolMetadata("C Escape Generator", "Turn text into escaped C string literals or explicit hex escape sequences.", "c-escape-generator");export default function Page() { return <ToolShell slug="c-escape-generator" eyebrow="Embedded" title="C Escape Generator" description="Turn text into escaped C string literals or explicit hex escape sequences."><CEscapeGeneratorTool /></ToolShell>; }
+import { CEscapeGeneratorTool } from "@/components/c-escape-generator-tool";
+import { createToolPage } from "@/lib/tool-page";
+
+const toolPage = createToolPage({
+  slug: "c-escape-generator",
+  eyebrow: "Embedded",
+  title: "C Escape Generator",
+  description: "Turn text into escaped C string literals or explicit hex escape sequences.",
+  component: CEscapeGeneratorTool,
+});
+
+export const metadata = toolPage.metadata;
+export default toolPage.Page;
