@@ -31,14 +31,31 @@ function evaluateExpression(expression: string) {
   }
 }
 
-function getAlternativeBases(result: string): { hex: string; oct: string; bin: string } | null {
+function getFloat64IEEEBits(num: number): { hex: string; oct: string; bin: string } {
+  const buffer = new ArrayBuffer(8);
+  const view = new DataView(buffer);
+  view.setFloat64(0, num);
+  const high = view.getUint32(0);
+  const low = view.getUint32(4);
+  const binStr = high.toString(2).padStart(32, "0") + low.toString(2).padStart(32, "0");
+  const hexStr = "0x" + high.toString(16).toUpperCase().padStart(8, "0") + low.toString(16).toUpperCase().padStart(8, "0");
+  // Pad to 66 chars (nearest multiple of 3 that covers 64 bits) for 3-bit octal grouping
+  const paddedBin = binStr.padStart(66, "0");
+  let octDigits = "";
+  for (let i = 0; i < paddedBin.length; i += 3) {
+    octDigits += parseInt(paddedBin.slice(i, i + 3), 2).toString(8);
+  }
+  return { hex: hexStr, oct: "0o" + octDigits, bin: "0b" + binStr };
+}
+
+function getAlternativeBases(result: string): { hex: string; oct: string; bin: string; ieee754: boolean } | null {
   const num = Number(result);
   if (!Number.isFinite(num)) return null;
   if (!Number.isInteger(num)) {
-    return { hex: "N/A (float)", oct: "N/A (float)", bin: "N/A (float)" };
+    return { ...getFloat64IEEEBits(num), ieee754: true };
   }
   if (!Number.isSafeInteger(num)) {
-    return { hex: "N/A (too large)", oct: "N/A (too large)", bin: "N/A (too large)" };
+    return { hex: "N/A (too large)", oct: "N/A (too large)", bin: "N/A (too large)", ieee754: false };
   }
   const abs = Math.abs(num);
   const sign = num < 0 ? "-" : "";
@@ -46,6 +63,7 @@ function getAlternativeBases(result: string): { hex: string; oct: string; bin: s
     hex: `${sign}0x${abs.toString(16).toUpperCase()}`,
     oct: `${sign}0o${abs.toString(8)}`,
     bin: `${sign}0b${abs.toString(2)}`,
+    ieee754: false,
   };
 }
 
@@ -104,6 +122,7 @@ export function CalculatorTool() {
             <p className="text-2xl font-bold">{result || "0"}</p>
             {altBases && (
               <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-white/70">
+                {altBases.ieee754 && <span className="w-full text-white/40 text-[10px] uppercase tracking-widest">IEEE 754 (float64)</span>}
                 <span><span className="text-white/40">HEX</span> {altBases.hex}</span>
                 <span><span className="text-white/40">OCT</span> {altBases.oct}</span>
                 <span><span className="text-white/40">BIN</span> {altBases.bin}</span>
