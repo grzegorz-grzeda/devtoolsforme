@@ -155,6 +155,7 @@ export function HomeToolBrowser({ tools }: { tools: ToolDefinition[] }) {
           <button
             type="button"
             onClick={() => setActiveCategory(featuredCategory)}
+            aria-label="Browse embedded tools"
             className="rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/25"
           >
             Browse embedded →
