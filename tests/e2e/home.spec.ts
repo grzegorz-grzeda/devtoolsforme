@@ -5,8 +5,8 @@ test("homepage loads and links to tool pages", async ({ page }) => {
 
   await expect(page.getByRole("heading", { name: /Quick browser tools for developer workflows/i })).toBeVisible();
   await expect(page.getByRole("searchbox", { name: /Search tools/i })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Browse embedded/i })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Embedded tools/i })).toBeVisible();
+  await expect(page.getByRole("banner").getByRole("link", { name: "My tools" })).toBeVisible();
+  await expect(page.getByRole("contentinfo").getByRole("link", { name: "My tools" })).toBeVisible();
 
   await page.getByRole("link", { name: /UUID Generator/i }).first().click();
   await expect(page).toHaveURL(/\/tools\/uuid$/);
@@ -21,6 +21,26 @@ test("homepage search can filter to embedded tools", async ({ page }) => {
 
   await expect(page.getByRole("link", { name: /CRC Calculator/i }).first()).toBeVisible();
   await expect(page.getByText(/Showing/i)).toBeVisible();
+});
+
+test("saved tool lists live on the my tools page", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("dtfm-favorite-tools", JSON.stringify(["uuid"]));
+    window.localStorage.setItem("dtfm-recent-tools", JSON.stringify(["json-formatter"]));
+    window.localStorage.setItem("dtfm-tool-open-counts", JSON.stringify({ "crc-calculator": 3 }));
+  });
+
+  await page.goto("/");
+  await page.getByRole("banner").getByRole("link", { name: "My tools" }).click();
+
+  await expect(page).toHaveURL(/\/my-tools$/);
+  await expect(page.getByRole("heading", { name: /Your tool lists/i })).toBeVisible();
+  await expect(page.getByText("Favorites", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /UUID Generator/i })).toBeVisible();
+  await expect(page.getByText("Recent", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /JSON Formatter/i })).toBeVisible();
+  await expect(page.getByText("Popular", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /CRC Calculator/i })).toBeVisible();
 });
 
 test("404 page renders useful recovery actions", async ({ page }) => {

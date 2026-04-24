@@ -3,6 +3,7 @@ import { ThemeToggle } from "@/components/theme-controller";
 
 const navItems = [
   { href: "/", label: "All tools" },
+  { href: "/my-tools", label: "My tools" },
   { href: "/tools/json-formatter", label: "Data" },
   { href: "/tools/regex-tester", label: "Text" },
   { href: "/about", label: "About" },
