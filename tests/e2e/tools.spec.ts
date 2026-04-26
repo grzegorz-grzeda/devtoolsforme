@@ -320,6 +320,39 @@ test("two's complement converter shows signed and unsigned views", async ({ page
   await expect(page.getByText(/0xFF/i)).toBeVisible();
 });
 
+test("energy consumption calculator updates lifetime live and shows larger units", async ({ page }) => {
+  await page.goto("/tools/energy-consumption-calculator");
+
+  await expect(page.getByRole("link", { name: "Back to tools" })).toBeVisible();
+  await expect(page.getByText("Embedded", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Energy Consumption Calculator" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Calculate/i })).toHaveCount(0);
+
+  await page.getByLabel(/Battery capacity/i).fill("24");
+  await page.getByLabel(/Current \[mA\]/i).nth(0).fill("1");
+  await page.getByLabel(/Time \[s\]/i).nth(0).fill("24");
+  await page.getByLabel(/Current \[mA\]/i).nth(1).fill("0");
+  await page.getByLabel(/Time \[s\]/i).nth(1).fill("0");
+
+  await expect(page.getByText("1.0000 mA")).toBeVisible();
+  await expect(page.getByText("24.00 h / 1 day")).toBeVisible();
+});
+
+test("memory map visualizer uses shared shell and analyzes struct layout", async ({ page }) => {
+  await page.goto("/tools/memory-map-visualizer");
+
+  await expect(page.getByRole("link", { name: "Back to tools" })).toBeVisible();
+  await expect(page.getByText("Embedded", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Memory Map Visualizer" })).toBeVisible();
+
+  await page.getByRole("button", { name: /^Analyze$/ }).click();
+
+  await expect(page.getByText("Size: 12 bytes")).toBeVisible();
+  await expect(page.getByRole("columnheader", { name: "Padding Before" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "count" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "4" }).first()).toBeVisible();
+});
+
 test("consent banner persists acceptance and recently opened tools appear on the my tools page", async ({ page, context }) => {
   await page.goto("/");
 

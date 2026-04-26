@@ -60,4 +60,7 @@ export const tools: ToolDefinition[] = [
   { slug: "mime-lookup", name: "MIME Lookup", description: "Look up common file extensions and MIME types for headers, uploads, and assets.", badge: "Reference", category: "Reference" },
   { slug: "color-converter", name: "Color Converter", description: "Convert HEX, RGB, and HSL colors into richer design-ready formats with live previews and palettes.", badge: "Design", category: "Design" },
   { slug: "color-contrast", name: "Color Contrast Checker", description: "Check foreground and background combinations against WCAG contrast thresholds.", badge: "Design", category: "Design" }
+  ,
+  { slug: "energy-consumption-calculator", name: "Energy Consumption Calculator", description: "Calculate average current draw and estimated battery life for battery-powered IoT devices.", badge: "Embedded", category: "Embedded" },
+  { slug: "memory-map-visualizer", name: "Memory Map Visualizer", description: "Visualize C struct field offsets, alignment padding, and final memory layout.", badge: "Embedded", category: "Embedded" }
 ];
