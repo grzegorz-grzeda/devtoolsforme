@@ -278,6 +278,16 @@ test("tool hero stays compact on desktop layouts", async ({ page }) => {
   expect(box!.height).toBeLessThan(180);
 });
 
+test("tool toolbar exposes the browser bookmark shortcut", async ({ page }) => {
+  await page.goto("/tools/json-formatter");
+
+  const bookmarkButton = page.getByRole("button", { name: "Bookmark in browser" });
+  await expect(bookmarkButton).toBeVisible();
+
+  await bookmarkButton.click();
+  await expect(page.getByRole("status")).toContainText(/Press (Ctrl|Command)\+D/);
+});
+
 test("TLS key generator renders key generation controls", async ({ page }) => {
   await page.goto("/tools/tls-key-generator");
 

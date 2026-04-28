@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { FavoriteToolButton, ToolCopyLinkButton, ToolVisitTracker } from "@/components/tool-preferences";
+import { BrowserBookmarkButton, FavoriteToolButton, ToolCopyLinkButton, ToolVisitTracker } from "@/components/tool-preferences";
 
 export function ToolShell({
   slug,
@@ -23,9 +23,12 @@ export function ToolShell({
         <Link href="/" className="theme-secondary-button px-3 py-1.5 text-sm font-medium">
           Back to tools
         </Link>
-        <span className="theme-chip px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em]">
-          {eyebrow}
-        </span>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <BrowserBookmarkButton />
+          <span className="theme-chip px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em]">
+            {eyebrow}
+          </span>
+        </div>
       </div>
 
       <section className="space-y-3">

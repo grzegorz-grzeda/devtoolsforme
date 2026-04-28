@@ -42,6 +42,37 @@ export function ToolVisitTracker({ slug }: { slug: string }) {
   return null;
 }
 
+export function BrowserBookmarkButton() {
+  const [showShortcut, setShowShortcut] = useState(false);
+  const [shortcut, setShortcut] = useState("Ctrl+D");
+
+  useEffect(() => {
+    setShortcut(/Mac|iPhone|iPad|iPod/i.test(window.navigator.userAgent) ? "Command+D" : "Ctrl+D");
+  }, []);
+
+  function showBrowserBookmarkShortcut() {
+    setShowShortcut(true);
+    window.setTimeout(() => setShowShortcut(false), 4000);
+  }
+
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <button
+        type="button"
+        onClick={showBrowserBookmarkShortcut}
+        className="rounded-full bg-sage px-4 py-2 text-sm font-semibold text-lake transition hover:bg-sage/70"
+      >
+        Bookmark in browser
+      </button>
+      {showShortcut && (
+        <span role="status" className="text-sm font-medium text-ink/70">
+          Press {shortcut}
+        </span>
+      )}
+    </div>
+  );
+}
+
 export function FavoriteToolButton({ slug }: { slug: string }) {
   const [favorite, setFavorite] = useState(false);
 
